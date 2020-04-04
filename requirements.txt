@@ -11,4 +11,5 @@ Flask==1.0.3
 Flask-Compress==1.4.0
 Flask-Cors==3.0.8
 gunicorn==19.9.0
+pandas==0.25.1
 
