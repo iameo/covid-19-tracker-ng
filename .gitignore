@@ -2,3 +2,8 @@ venv
 *.pyc
 .DS_Store
 .env
+venv/
+.vscode
+.vscode/
+data/
+tempCodeRunnerFile.py

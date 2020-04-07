@@ -1,9 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
+# from app import server
+# import app
 
 import pandas as pd
 
@@ -48,58 +53,46 @@ def loadData(fileName, columnName):
              .astype({'date':'datetime64[ns]', columnName:'Int64'}, errors='ignore')
     data['Province/State'].fillna('<all>', inplace=True)
     data[columnName].fillna(0, inplace=True)
-    # data.to_csv("bleh.csv")
+    data.to_csv("data/bleh.csv")
     return data
 
 allData = loadData("time_series_covid19_confirmed_global.csv", "CumConfirmed") \
     .merge(loadData("time_series_covid19_deaths_global.csv", "CumDeaths")) \
     .merge(loadData("time_series_covid19_recovered_global.csv", "CumRecovered"))
 
+allData.to_csv("alldata.csv", index=False)
+
+world_data = allData["Country/Region"].unique()
+xxx = pd.DataFrame(world_data)
+xxx.to_csv("data/bleh2.csv", index=False)
+world_data.sort()
+
 african_data = allData[allData["Country/Region"].isin(African_countries)]
-countries = african_data['Country/Region'].unique()
-countries.sort()
+afri_countries = african_data['Country/Region'].unique()
+afri_countries.sort()
 
 resources_credit = dcc.Link()
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SOLAR, external_stylesheets])
 
 
-
-
-# footer = dbc.Row(
-#     dbc.Col(),
-#     dbc.Col(
-#         dbc.Button("Toggle fade", id="fade-transition-button"),
-#         dbc.Fade()
-#     )
-# )
 app.layout = dbc.Container(
     [
-        html.H1('Documented COVID-19 Cases in Africa.'),
-        html.P("(A possible 1-day delay in data transmission. If you're in Nigeria, check the last graph for more visuals)"),
+        html.H1('DOCUMENTED COVID-19 CASES IN AFRICA.', className = "text-center"),
+        html.P("(A possible 1-day delay in data transmission. If you're in Nigeria, check the last graph for more visuals)", className = "text-center"),
 
-        dbc.Row(
-            [
+        dbc.Row([
+                # dbc.Container([
                 dbc.Col(
                     [
                         html.H5('Country'),
                         dcc.Dropdown(
                         id='country',
-                        options=[{'label':c, 'value':c} for c in countries],
+                        options=[{'label':c, 'value':c} for c in afri_countries],
                         value='Nigeria'
-            ),
-                    ], md=8,
-                ),
-
-                # dbc.Col(
-                #     [
-                #         html.H5('State'),
-                #         dcc.Dropdown(
-                #             id='state'
-                #         )
-                #     ], md=4,
-                # ),
-
+                        ),
+                    ], md=6,
+                    ),
                 dbc.Col(
                     [
                         html.H5('Data Metrics'),
@@ -107,11 +100,58 @@ app.layout = dbc.Container(
                         id='metrics',
                         options=[{'label':m, 'value':m} for m in ['Confirmed', 'Recovered', 'Deaths']],
                         value=['Confirmed', 'Recovered']
-            )
-                    ], md=4,
+                        )
+                    ], md=6,
 
-                ),# style={ 'font-family':"Courier New, monospace" },
-            ]),
+                    ),# style={ 'font-family':"Courier New, monospace" },
+                ]), #container
+         
+    html.Br(),
+
+    dbc.Row([
+        dbc.Col([
+            html.P("Confirmed Cases (Worldwide): "
+
+            )
+
+        ]),
+        dbc.Col([
+            html.P("Recovered (Worldwide): "
+                
+            )
+
+        ]),
+        dbc.Col([
+            html.P(
+                "Deaths (Worldwide): "
+            )
+
+        ])
+
+    ]),
+
+        dbc.Row([
+        dbc.Col([
+            html.P("Confirmed Cases (Africa): "
+
+            )
+
+        ]),
+        dbc.Col([
+            html.P("Recovered (Africa): "
+                
+            )
+
+        ]),
+        dbc.Col([
+            html.P(
+                "Deaths (Africa): "
+            )
+
+        ])
+
+    ]),
+  
 
     dcc.Graph(
         id="plot_new_metrics",
@@ -122,64 +162,61 @@ app.layout = dbc.Container(
         config={ 'displayModeBar': False }
     ),
     html.Br(),
+    dbc.Container([
     dbc.Alert(
         [
             "This section is reserved for Nigeria. ",
-            html.A("click here to view general data", href="#", className="alert-link"),
+            html.A("click here to view general data", href="#",  style = {'textAlign': "center"}, className="alert-link "),
             ],
             color="primary",
         ),
 
-    dbc.Row([
-            # dbc.Col(
-            #     [
-            #         html.H6('Country'),
-            #         dcc.Dropdown(
-            #         id='country_ng',
-            #         options=[{'label':c, 'value':c} for c in [{'label':"Nigeria", 'value':"NG"]],
-            #         value='Nigeria'
-            # ),
-            #     ], md=6,
-            # ),
-        
-            dbc.Col(
-                 [
+    dbc.Row(
+            [
+                dbc.Col([
                     dcc.Dropdown(
                     id='state_ng',
                     options=[{'label':d, 'value':d} for d in NG_states],
                     value = 'Lagos',
                     ),
-                    html.Div(id='divv'),
-                    ], md=6,
+                    html.Div(id='state_output'),
+                ], md=6,
                     
                 ),
+                dbc.Col([
+                        "BLEH"
+                ], md=6,
+                    
+                ),
+            ]),
     ]),
     html.Hr(),
 
+
+    
     dbc.Row([
     #     dbc.Col(children=[
-    #         html.P(children=["Made with ",html.I(className='fa fa-heart',  style = {'color':'red'}),html.P(" by Emmanuel")]),
+    #         html.P(children=["Made with ",html.I(className='fa fa-heart',   = {'color':'red'}),html.P("style by Emmanuel")]),
     #         html.Div(" by Emmanuel"),
     # ]
             
     #     ),  
             dbc.Col(
                 [
-                    html.H6('Made With love by Emmanuel'),
-   
-                    ], md=8,
+                    dcc.Markdown("Made with love by Emmanuel"),
+                    # "Resources [!ddd](https://ddd.com), [!fdc](https://xcv.com), [NCDC](https:www.ncdc,gov.ng)"),
+                   
+                    ], sm=6,
                 ),
+
             dbc.Col(
                 [
-                    html.P('Resources | Credit'),
-                        dcc.Dropdown(
-                        id='resources_credit',
-                        options=[{'label':c, 'value':c} for c in resources_credit],
-                        value='NCDC'
-            ),
-            
-                    ], md=4,
+                    html.Div(
+                    "Resources [!ddd](https://ddd.com), [!fdc](https://xcv.com), [NCDC](https:www.ncdc,gov.ng)"),
+                   
+                    ], sm=6,
                 ),
+
 
 
     ]),
@@ -211,7 +248,7 @@ def barchart(data, metrics, prefix="", yaxisTitle=""):
         ) for metric in metrics
     ])
     figure.update_layout( 
-              barmode='group', legend=dict(x=.05, y=0.95, font={'size':15}, bgcolor='rgba(240,240,240,0.5)'), 
+              barmode='group', legend=dict(x=.05, y=0.95, font={'size':1}, bgcolor='rgba(240,240,240,0.5)'), 
               plot_bgcolor='#FFFFFF', font=tickFont) \
           .update_xaxes( 
               title="", tickangle=-90, type='category', showgrid=True, gridcolor='#DDDDDD', 
@@ -239,69 +276,21 @@ def update_plot_cum_metrics(country, metrics):
 
 
 @app.callback(
-    Output(component_id='divv', component_property='children'),
+    Output(component_id='state_output', component_property='children'),
     [Input('state_ng', 'value')]
 )
 def update_output_div(input_value):
     if input_value == "Lagos":
-        return 'Extracting data and making plots for "{}" '.format(input_value), "(Eko o ni baje o)"
+        return 'Extracting data and making plots for "{}" '.format(input_value), "(Èkó ò ní bàjé oooooo!)"
     return 'Extracting data and making plots for "{}"'.format(input_value)
-    # else:
-    #     state_options = [{'label':"Not Defined", 'value':"N/A"}]
-    #     state_value = state_options[0]['value']
-    #     return state_options, state_value
-    # return
-
-# def update_states():
-#     states = list(NG_states)
-#     states.insert(0, '<all>')
-#     states.sort()
-#     state_options = [{'label':s, 'value':s} for s in states]
-#     state_value = state_options[0]['value']
-#     return state_options, state_value
 
 
-
-# @app.callback(
-#     Output('plot_new_metrics', 'figure'), 
-#     [Input('resources_credit', 'value')]
-# )
+app.title = 'COVID-19 TRACKER (AFRICA)'
 server = app.server
 
 
 
-
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug=True, port=5000)
 
 
-
-
-# body = dbc.Container(
-#     [
-#        dbc.Row(
-#            [
-#                dbc.Col(
-#                   [
-#                      html.H2("Heading"),
-#                      html.P(
-#                          """\
-# Donec id elit non mi porta gravida at eget metus.Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentumnibh, ut fermentum massa justo sit amet risus. Etiam porta semmalesuada magna mollis euismod. Donec sed odio dui. Donec id elit nonmi porta gravida at eget metus. Fusce dapibus, tellus ac cursuscommodo, tortor mauris condimentum nibh, ut fermentum massa justo sitamet risus. Etiam porta sem malesuada magna mollis euismod. Donec sedodio dui."""
-#                            ),
-#                            dbc.Button("View details", color="secondary"),
-#                    ],
-#                   md=6,
-#                ),
-#               dbc.Col(
-#                  [
-#                      html.H2("Graph"),
-#                      dcc.Graph(
-#                          figure={"data": [{"x": [1, 2, 3], "y": [1, 4, 9]}]}
-#                             ),
-#                         ]
-#                      ),
-#                 ]
-#             )
-#        ],
-# className="mt-4",
-# )
