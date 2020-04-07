@@ -4,11 +4,6 @@ dash-core-components==1.8.1
 dash-html-components==1.0.2
 dash-renderer==1.2.4
 dash-table==4.6.1
-docker==3.4.0
-docker-pycreds==0.3.0
-Flask==1.0.3
-Flask-Compress==1.4.0
-Flask-Cors==3.0.8
 gunicorn==19.9.0
 pandas==0.25.1
 
