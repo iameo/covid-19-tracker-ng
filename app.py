@@ -288,6 +288,6 @@ server = app.server
 
 
 if __name__ == '__main__':
-    app.run_server(host="0.0.0.0", debug=False)
+    app.run_server(debug=False)
 
 
