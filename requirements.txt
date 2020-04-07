@@ -8,3 +8,6 @@ Flask==1.0.3
 gunicorn==19.9.0
 pandas==0.25.1
 pandas-datareader==0.6.0
+plotly==4.6.0
+simplejson==3.17.0
+zmq==0.0.0

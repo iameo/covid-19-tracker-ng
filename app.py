@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -7,7 +6,14 @@ import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 
+import requests
+import json
+
 import pandas as pd
+
+from plotly.offline import init_notebook_mode
+init_notebook_mode(connected=True)
+
 
 
 African_countries = [
@@ -32,7 +38,19 @@ NG_states = [
 
 baseURL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/"
 
+global_stat_url = "https://coronavirus-19-api.herokuapp.com/all"
 
+
+def get_global_stat(url):    
+    fetch_url = requests.get(url)
+    global_stat = fetch_url.content
+    global_stat = json.loads(global_stat)
+    global_cases = global_stat['cases']
+    global_recovered = global_stat['recovered']
+    global_deaths = global_stat['deaths']
+    return global_cases, global_recovered, global_deaths
+  
+global_cases, global_recovered, global_deaths = get_global_stat(global_stat_url)
 
 tickFont = {'size':12, 'color':"rgb(30,30,30)", 'family':"Courier New, monospace"}
 
@@ -60,9 +78,9 @@ afri_countries.sort()
 font_awesome_url = 'https://use.fontawesome.com/releases/v5.8.1/css/all.css'
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SOLAR, font_awesome_url])
-app.config.suppress_callback_exceptions = True
-
-
+server = app.server
+app.config.suppress_callback_exceptions=True
+app.title = 'COVID-19 TRACKER (AFRICA)'
 
 app.config.update({
      'routes_pathname_prefix': '',
@@ -70,11 +88,13 @@ app.config.update({
 })
 
 
-app.layout = dbc.Container(
+
+app.layout = html.Div(
     [
+        dbc.Container([
         html.H1('DOCUMENTED COVID-19 CASES IN AFRICA', className = "text-center"),
         html.P("(A possible 1-day delay in data transmission. If you're in Nigeria, check the last graph for more visuals)", className = "text-center"),
-
+        
         dbc.Row([
                 dbc.Col(
                     [
@@ -84,7 +104,7 @@ app.layout = dbc.Container(
                         options=[{'label':c, 'value':c} for c in afri_countries],
                         value='Nigeria'
                         ),
-                    ], sm=6,
+                    ], width=6, sm=6, md=6,
                     ),
                 dbc.Col(
                     [
@@ -94,7 +114,7 @@ app.layout = dbc.Container(
                         options=[{'label':m, 'value':m} for m in ['Confirmed', 'Recovered', 'Deaths']],
                         value=['Confirmed', 'Recovered']
                         )
-                    ], sm=6,
+                    ], width=6, sm=6, md=6,
 
                     ),# style={ 'font-family':"Courier New, monospace" },
                     
@@ -104,51 +124,66 @@ app.layout = dbc.Container(
 
     dbc.Row([
         dbc.Col([
-            html.Div("Confirmed Cases (Global): "
+            html.Div(children = ["Confirmed (Global)",
+            html.Div(id='live-update-confirmed', style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(100,140,240)'}),
+            dcc.Interval(
+                id='interval-component-1',
+                interval=1*10000, # in milliseconds
+                n_intervals=0
+                ),
+            ]),
+            ], md=4, width=4),
 
-            )
-
-        ]),
         dbc.Col([
-            html.Div("Recovered (Global): "
-                
-            )
+            html.Div(children = ["Recovered (Global)",
+            html.Div(id='live-update-recovered',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(30,200,30)'}),
+            dcc.Interval(
+                id='interval-component-2',
+                interval=1*10000, # in milliseconds
+                n_intervals=0
+                ),
+            ]),
+            ], md=4, width=4, style = {'text-align':'center'}),
 
-        ]),
         dbc.Col([
-            html.Div(
-                "Deaths (Global): ",
-                # html.P(id='global_death')
-            )
-        #    dcc.Interval()
+            html.Div(children = ["Deaths (Global)",
+            html.Div(id='live-update-deaths',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'red'}),
+            dcc.Interval(
+                id='interval-component-3',
+                interval=1*10000, # in milliseconds
+                n_intervals=0
+                ),
+            ]),
+            ], md=4, width=4, style = { 'text-align': 'right',
+                                        'justify-content': 'right'})
 
-        ])
+    ],justify="between"),
 
-    ]),
-
-        dbc.Row([
+    dbc.Row([
         dbc.Col([
-            html.P("Confirmed Cases (Africa): "
+            html.P("Confirmed (Africa): "
 
             )
 
-        ]),
+        ],sm=4),
         dbc.Col([
             html.P("Recovered (Africa): "
                 
             )
 
-        ]),
+        ],sm=4),
         dbc.Col([
             html.P(
                 "Deaths (Africa): "
             )
 
-        ])
+        ],sm=4)
 
     ]),
+    ]),
   
-
+  
+    dbc.Container([
     dcc.Graph(
         id="plot_new_metrics",
         config={ 'displayModeBar': False }
@@ -157,7 +192,10 @@ app.layout = dbc.Container(
         id="plot_cum_metrics",
         config={ 'displayModeBar': False }
     ),
+    ], style = {'padding-left':'10px', 'padding-right':'10px'}),
+
     html.Br(),
+    
     dbc.Container([
     dbc.Alert(
         [
@@ -169,35 +207,33 @@ app.layout = dbc.Container(
 
     dbc.Row(
             [
-                dbc.Col([
-                    dcc.Dropdown(
-                    id='state_ng',
-                    options=[{'label':d, 'value':d} for d in NG_states],
-                    value = 'Lagos',
-                    ),
-  
-                ], md=6,
-                    
+            dbc.Col([
+                dcc.Dropdown(
+                id='state_ng',
+                options=[{'label':d, 'value':d} for d in NG_states],
+                value = 'Lagos',
                 ),
-                dbc.Col([
-                    html.Div(id='state_output'),
+  
+                ], md=6),
+
+            dbc.Col([
+                html.Div(id='state_output'),
                 ], md=6,
-                    
                 ),
             ]),
-    ]),
-    html.Hr(),
+        ]),
+        html.Hr(),
 
 
-    
+    dbc.Container([
     dbc.Row([ 
             dbc.Col(
                 [  
-                    dcc.Markdown("[EMMANUEL](https://www.twitter.com/__oemmanuel__)"),
-                ], xs=6,
-                ),
-
-
+                    dcc.Markdown("[EMMANUEL](https://www.twitter.com/__oemmanuel__)", style={'text-decoration': 'none',
+                                                                            'cursor': 'grab',
+                                                                            'color': 'whitesmoke',
+                                                                            'font-weight': 'bold'}),
+                ], xs=6),
 
             dbc.Col(
                 [
@@ -208,8 +244,9 @@ app.layout = dbc.Container(
                 ),
 
     ]),
-    
-])
+    ]),
+
+    ])
 
 
 
@@ -262,7 +299,6 @@ def update_plot_cum_metrics(country, metrics):
     return barchart(data, metrics, prefix="Cum", yaxisTitle="Cumulated Cases")
 
 
-
 @app.callback(
     Output(component_id='state_output', component_property='children'),
     [Input('state_ng', 'value')]
@@ -273,21 +309,31 @@ def update_output_div(input_value):
     return 'Extracting data and making plots for "{}"'.format(input_value)
 
 
-# @app.callback(
-#     Output(component_id='global_death', component_property='children'),
-#     [Input('global_death_stat', 'value')]
-# )
-# def update_global_death(input_value):
-#     return 300
+@app.callback(
+    Output('live-update-confirmed', 'children'),
+    [Input('interval-component-1', 'n_intervals')]
+)
+def fetch_confirmed_cases(n):
+    return global_cases
+
+@app.callback(
+    Output('live-update-recovered', 'children'),
+    [Input('interval-component-2', 'n_intervals')]
+)
+def fetch_confirmed_cases(n):
+    return global_recovered
+
+@app.callback(
+    Output('live-update-deaths', 'children'),
+    [Input('interval-component-3', 'n_intervals')]
+)
+def fetch_confirmed_cases(n):
+    return global_deaths
 
 
 
-app.title = 'COVID-19 TRACKER (AFRICA)'
-server = app.server
 
 
 
 if __name__ == '__main__':
     app.run_server(debug=False)
-
-
