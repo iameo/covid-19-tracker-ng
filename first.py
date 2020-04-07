@@ -6,8 +6,6 @@ import dash_html_components as html
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
-# from app import server
-# import app
 
 import pandas as pd
 
@@ -19,8 +17,7 @@ African_countries = [
     "Gambia", "Ghana", "Guinea", "Guinea-Bissau", "Kenya", "Lesotho", "Liberia", "Libya", "Madagascar", "Malawi",
     "Mali", "Mauritania", "Mauritius", "Morocco", "Mozambique", "Namibia", "Niger", "Nigeria",
     "Rwanda", "Sao Tome and Principe", "Senegal", "Seychelles", "Sierra Leone", "Somalia", "South Africa",
-    "South Sudan", "Sudan", "Tanzania", "Togo", "Tunisia", "Uganda", "Zambia", "Zimbabwe"
-                    
+    "South Sudan", "Sudan", "Tanzania", "Togo", "Tunisia", "Uganda", "Zambia", "Zimbabwe"                 
             ]
 
 NG_states = [
@@ -28,20 +25,14 @@ NG_states = [
     "Benue","Borno","Cross River","Delta", "Ebonyi","Enugu","Edo","Ekiti","Gombe",
     "Imo","Jigawa","Kaduna","Kano","Katsina","Kebbi","Kogi","Kwara","Lagos","Nasarawa",
     "Niger","Ogun","Ondo","Osun","Oyo","Plateau","Rivers","Sokoto","Taraba","Yobe", "Zamfara",
-    ]           
+    ]    
 
-external_stylesheets = [
-{
-    'href': 'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
-    'rel': 'stylesheet',
-    'integrity': 'sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf',
-    'crossorigin': 'anonymous'
-}
-]
+
+
 
 baseURL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/"
 
-# external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
 
 tickFont = {'size':12, 'color':"rgb(30,30,30)", 'family':"Courier New, monospace"}
 
@@ -58,7 +49,7 @@ allData = loadData("time_series_covid19_confirmed_global.csv", "CumConfirmed") \
     .merge(loadData("time_series_covid19_deaths_global.csv", "CumDeaths")) \
     .merge(loadData("time_series_covid19_recovered_global.csv", "CumRecovered"))
 
-allData.to_csv("alldata.csv", index=False)
+# allData.to_csv("alldata.csv", index=False)
 
 # world_data = allData["Country/Region"].unique()
 # world_data.sort()
@@ -66,14 +57,16 @@ allData.to_csv("alldata.csv", index=False)
 african_data = allData[allData["Country/Region"].isin(African_countries)]
 afri_countries = african_data['Country/Region'].unique()
 afri_countries.sort()
+font_awesome_url = 'https://use.fontawesome.com/releases/v5.8.1/css/all.css'
 
-
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SOLAR])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SOLAR, font_awesome_url])
 app.config.suppress_callback_exceptions = True
 
+
+
 app.config.update({
-     'routes_pathname_prefix': ''
-   , 'requests_pathname_prefix': ''
+     'routes_pathname_prefix': '',
+     'requests_pathname_prefix': '',
 })
 
 
@@ -83,7 +76,6 @@ app.layout = dbc.Container(
         html.P("(A possible 1-day delay in data transmission. If you're in Nigeria, check the last graph for more visuals)", className = "text-center"),
 
         dbc.Row([
-                # dbc.Container([
                 dbc.Col(
                     [
                         html.H5('Country'),
@@ -92,7 +84,7 @@ app.layout = dbc.Container(
                         options=[{'label':c, 'value':c} for c in afri_countries],
                         value='Nigeria'
                         ),
-                    ], md=6,
+                    ], sm=6,
                     ),
                 dbc.Col(
                     [
@@ -102,30 +94,33 @@ app.layout = dbc.Container(
                         options=[{'label':m, 'value':m} for m in ['Confirmed', 'Recovered', 'Deaths']],
                         value=['Confirmed', 'Recovered']
                         )
-                    ], md=6,
+                    ], sm=6,
 
                     ),# style={ 'font-family':"Courier New, monospace" },
-                ]), #container
+                    
+                ],justify="between"), #container
          
     html.Br(),
 
     dbc.Row([
         dbc.Col([
-            html.P("Confirmed Cases (Worldwide): "
+            html.Div("Confirmed Cases (Global): "
 
             )
 
         ]),
         dbc.Col([
-            html.P("Recovered (Worldwide): "
+            html.Div("Recovered (Global): "
                 
             )
 
         ]),
         dbc.Col([
-            html.P(
-                "Deaths (Worldwide): "
+            html.Div(
+                "Deaths (Global): ",
+                # html.P(id='global_death')
             )
+        #    dcc.Interval()
 
         ])
 
@@ -180,12 +175,12 @@ app.layout = dbc.Container(
                     options=[{'label':d, 'value':d} for d in NG_states],
                     value = 'Lagos',
                     ),
-                    html.Div(id='state_output'),
+  
                 ], md=6,
                     
                 ),
                 dbc.Col([
-                        "BLEH"
+                    html.Div(id='state_output'),
                 ], md=6,
                     
                 ),
@@ -195,29 +190,22 @@ app.layout = dbc.Container(
 
 
     
-    dbc.Row([
-    #     dbc.Col(children=[
-    #         html.P(children=["Made with ",html.I(className='fa fa-heart',   = {'color':'red'}),html.P("style by Emmanuel")]),
-    #         html.Div(" by Emmanuel"),
-    # ]
-            
-    #     ),  
+    dbc.Row([ 
             dbc.Col(
-                [
-                    dcc.Markdown("MADE WITH LOVE BY EMMANUEL"),
-                   
-                    ], sm=6,
+                [  
+                    dcc.Markdown("[EMMANUEL](https://www.twitter.com/__oemmanuel__)"),
+                ], xs=6,
                 ),
+
+
 
             dbc.Col(
                 [
                     dcc.Markdown(
-                    "Resources: [JHU DATA](https://github.com/CSSEGISandData/COVID-19), [NCDC](https://ncdc.gov.ng/),  [Ploner](https://github.com/ploner/coronavirus-py)", style = {'textAlign': 'right'}),
-                    
-                    ], sm=6,
+                    "Resources: [JHU DATA](https://github.com/CSSEGISandData/COVID-19)|[NCDC](https://ncdc.gov.ng/)|[Ploner](https://github.com/ploner/coronavirus-py)", style = {'textAlign': 'right'}),
+                    ], xs=6, 
+                    # style = {'textAlign':'right'},
                 ),
-
-
 
     ]),
     
@@ -284,6 +272,13 @@ def update_output_div(input_value):
         return 'Extracting data and making plots for "{}" '.format(input_value), "(Èkó ò ní bàjé oooooo!)"
     return 'Extracting data and making plots for "{}"'.format(input_value)
 
+
+# @app.callback(
+#     Output(component_id='global_death', component_property='children'),
+#     [Input('global_death_stat', 'value')]
+# )
+# def update_global_death(input_value):
+#     return 300
 
 
 
