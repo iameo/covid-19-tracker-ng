@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+
 # -*- coding: utf-8 -*-
 
 import dash
@@ -78,7 +78,7 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SOLAR, external_style
 
 app.layout = dbc.Container(
     [
-        html.H1('DOCUMENTED COVID-19 CASES IN AFRICA.', className = "text-center"),
+        html.H1('DOCUMENTED COVID-19 CASES IN AFRICA', className = "text-center"),
         html.P("(A possible 1-day delay in data transmission. If you're in Nigeria, check the last graph for more visuals)", className = "text-center"),
 
         dbc.Row([
