@@ -4,11 +4,10 @@ dash-core-components==1.8.1
 dash-html-components==1.0.2
 dash-renderer==1.2.4
 dash-table==4.6.1
-dash-daq==0.4.0
-Flask==1.0.3
-gunicorn==19.9.0
-pandas==0.25.1
-pandas-datareader==0.6.0
-plotly==4.6.0
+Flask==1.1.1
+gunicorn==19.10.0
+pandas==0.23.1
+requests==2.19.1
 simplejson==3.17.0
-zmq==0.0.0
+tornado==5.0.2
+urllib3==1.23
