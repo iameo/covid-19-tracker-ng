@@ -69,7 +69,7 @@ afri_countries.sort()
 
 resources_credit = dcc.Link()
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SOLAR, external_stylesheets])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SOLAR])
 
 
 app.layout = dbc.Container(
@@ -161,10 +161,10 @@ app.layout = dbc.Container(
     dbc.Container([
     dbc.Alert(
         [
-            "This section is reserved for Nigeria. ",
-            html.A("click here to view general data", href="#",  style = {'textAlign': "center"}, className="alert-link "),
+            "This section is reserved for Nigeria. ", 
+            html.A("click here to view general data", href="#", className="alert-link"),
             ],
-            color="primary",
+            color="primary", style = {'textAlign': "center", 'text-align':'center'}
         ),
 
     dbc.Row(
@@ -199,17 +199,16 @@ app.layout = dbc.Container(
     #     ),  
             dbc.Col(
                 [
-                    dcc.Markdown("Made with love by Emmanuel"),
-                    # "Resources [!ddd](https://ddd.com), [!fdc](https://xcv.com), [NCDC](https:www.ncdc,gov.ng)"),
+                    dcc.Markdown("MADE WITH LOVE BY EMMANUEL"),
                    
                     ], sm=6,
                 ),
 
             dbc.Col(
                 [
-                    html.Div(
-                    "Resources [!ddd](https://ddd.com), [!fdc](https://xcv.com), [NCDC](https:www.ncdc,gov.ng)"),
-                   
+                    dcc.Markdown(
+                    "Resources: [JHU DATA](https://github.com/CSSEGISandData/COVID-19), [NCDC](https://ncdc.gov.ng/),  [Ploner](https://github.com/ploner/coronavirus-py/blob/master/corona-app-v1/app.py)", style = {'textAlign': 'right'}),
+                    
                     ], sm=6,
                 ),
 
@@ -244,7 +243,7 @@ def barchart(data, metrics, prefix="", yaxisTitle=""):
         ) for metric in metrics
     ])
     figure.update_layout( 
-              barmode='group', legend=dict(x=.05, y=0.95, font={'size':1}, bgcolor='rgba(240,240,240,0.5)'), 
+              barmode='group', legend=dict(x=.05, y=0.95), 
               plot_bgcolor='#FFFFFF', font=tickFont) \
           .update_xaxes( 
               title="", tickangle=-90, type='category', showgrid=True, gridcolor='#DDDDDD', 
@@ -287,6 +286,6 @@ server = app.server
 
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(host="0.0.0.0", debug=False)
 
 
