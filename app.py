@@ -11,8 +11,6 @@ import json
 
 import pandas as pd
 
-from plotly.offline import init_notebook_mode
-init_notebook_mode(connected=True)
 
 
 
