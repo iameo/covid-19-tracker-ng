@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 
 import dash
@@ -53,7 +52,6 @@ def loadData(fileName, columnName):
              .astype({'date':'datetime64[ns]', columnName:'Int64'}, errors='ignore')
     data['Province/State'].fillna('<all>', inplace=True)
     data[columnName].fillna(0, inplace=True)
-    data.to_csv("data/bleh.csv")
     return data
 
 allData = loadData("time_series_covid19_confirmed_global.csv", "CumConfirmed") \
@@ -62,10 +60,8 @@ allData = loadData("time_series_covid19_confirmed_global.csv", "CumConfirmed") \
 
 allData.to_csv("alldata.csv", index=False)
 
-world_data = allData["Country/Region"].unique()
-xxx = pd.DataFrame(world_data)
-xxx.to_csv("data/bleh2.csv", index=False)
-world_data.sort()
+# world_data = allData["Country/Region"].unique()
+# world_data.sort()
 
 african_data = allData[allData["Country/Region"].isin(African_countries)]
 afri_countries = african_data['Country/Region'].unique()
