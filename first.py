@@ -67,9 +67,14 @@ african_data = allData[allData["Country/Region"].isin(African_countries)]
 afri_countries = african_data['Country/Region'].unique()
 afri_countries.sort()
 
-resources_credit = dcc.Link()
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SOLAR])
+app.config.suppress_callback_exceptions = True
+
+app.config.update({
+     'routes_pathname_prefix': ''
+   , 'requests_pathname_prefix': ''
+})
 
 
 app.layout = dbc.Container(
@@ -207,7 +212,7 @@ app.layout = dbc.Container(
             dbc.Col(
                 [
                     dcc.Markdown(
-                    "Resources: [JHU DATA](https://github.com/CSSEGISandData/COVID-19), [NCDC](https://ncdc.gov.ng/),  [Ploner](https://github.com/ploner/coronavirus-py/blob/master/corona-app-v1/app.py)", style = {'textAlign': 'right'}),
+                    "Resources: [JHU DATA](https://github.com/CSSEGISandData/COVID-19), [NCDC](https://ncdc.gov.ng/),  [Ploner](https://github.com/ploner/coronavirus-py)", style = {'textAlign': 'right'}),
                     
                     ], sm=6,
                 ),
@@ -278,6 +283,8 @@ def update_output_div(input_value):
     if input_value == "Lagos":
         return 'Extracting data and making plots for "{}" '.format(input_value), "(Èkó ò ní bàjé oooooo!)"
     return 'Extracting data and making plots for "{}"'.format(input_value)
+
+
 
 
 app.title = 'COVID-19 TRACKER (AFRICA)'
