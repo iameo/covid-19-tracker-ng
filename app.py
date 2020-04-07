@@ -126,7 +126,7 @@ app.layout = html.Div(
             html.Div(id='live-update-confirmed', style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(100,140,240)'}),
             dcc.Interval(
                 id='interval-component-1',
-                interval=1*10000, # in milliseconds
+                interval=600*10000, # in milliseconds
                 n_intervals=0
                 ),
             ]),
@@ -137,7 +137,7 @@ app.layout = html.Div(
             html.Div(id='live-update-recovered',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(30,200,30)'}),
             dcc.Interval(
                 id='interval-component-2',
-                interval=1*10000, # in milliseconds
+                interval=600*10000, # in milliseconds
                 n_intervals=0
                 ),
             ]),
@@ -148,7 +148,7 @@ app.layout = html.Div(
             html.Div(id='live-update-deaths',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'red'}),
             dcc.Interval(
                 id='interval-component-3',
-                interval=1*10000, # in milliseconds
+                interval=600*10000, # in milliseconds
                 n_intervals=0
                 ),
             ]),
