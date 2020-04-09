@@ -56,10 +56,6 @@ def get_global_stat(url):
   
 global_cases, global_recovered, global_deaths = get_global_stat(global_stat_url)
 
-# {"country":"Nigeria","cases":254,"todayCases":0,\
-# "deaths":6,"todayDeaths":0,"recovered":44,"\
-# active":204,"critical":2,"casesPerOneMillion":1,\
-# "deathsPerOneMillion":0,"totalTests":5000,"testsPerOneMillion":24},
 
 def get_nigeria_stat(url):
     fetch_url = requests.get(url)
@@ -160,7 +156,7 @@ app.layout = html.Div(
             html.Div(id='live-update-confirmed', style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(100,140,240)','font-family': 'Orbitron'}),
             dcc.Interval(
                 id='interval-component-1',
-                interval=700*10000, # in milliseconds
+                interval=7000*10000, # in milliseconds
                 n_intervals=0
                 ),
             ]),
@@ -171,7 +167,7 @@ app.layout = html.Div(
             html.Div(id='live-update-recovered',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(30,200,30)','font-family': 'Orbitron'}),
             dcc.Interval(
                 id='interval-component-2',
-                interval=700*10000, # in milliseconds
+                interval=7000*10000, # in milliseconds
                 n_intervals=0
                 ),
             ]),
@@ -182,7 +178,7 @@ app.layout = html.Div(
             html.Div(id='live-update-deaths',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'red','font-family': 'Orbitron'}),
             dcc.Interval(
                 id='interval-component-3',
-                interval=700*10000, # in milliseconds
+                interval=7000*10000, # in milliseconds
                 n_intervals=0
                 ),
             ]),
@@ -191,38 +187,38 @@ app.layout = html.Div(
 
     ],justify="between"),
 
-    dbc.Row([
-        dbc.Col([
-            html.P("Confirmed (Africa): "
+    # dbc.Row([
+    #     dbc.Col([
+    #         html.P("Confirmed (Africa): "
 
-            )
+    #         )
 
-        ],sm=4),
-        dbc.Col([
-            html.P("Recovered (Africa): "
+    #     ],sm=4),
+    #     dbc.Col([
+    #         html.P("Recovered (Africa): "
                 
-            )
+    #         )
 
-        ],sm=4),
-        dbc.Col([
-            html.P(
-                "Deaths (Africa): "
-            )
+    #     ],sm=4),
+    #     dbc.Col([
+    #         html.P(
+    #             "Deaths (Africa): "
+    #         )
 
-        ],sm=4)
+    #     ],sm=4)
 
-    ]),
+    # ]),
     ]),
   
   
     dbc.Container([
-    dcc.Graph(
-        id = "country-confirmed-line"),
-        dcc.Interval(
-                id='interval-component-4',
-                interval=700*10000, # in milliseconds
-                n_intervals=0
-                ),
+    # dcc.Graph(
+    #     id = "country-confirmed-line"),
+    #     dcc.Interval(
+    #             id='interval-component-4',
+    #             interval=700*10000, # in milliseconds
+    #             n_intervals=0
+    #             ),
  
     dcc.Graph(
         id="plot_new_metrics",
@@ -234,17 +230,17 @@ app.layout = html.Div(
     ),
     ], style = {'padding-left':'10px', 'padding-right':'10px'}),
     
-    html.Div(dcc.Checklist(id='global_format',
-            options=[{'label': i, 'value': i} for i in ['Africa', 'Nigeria']],
-            value='Africa',
-            labelStyle={'float': 'center', 'display': 'inline-block'},
-            ), style={'textAlign': 'center',
-                'color': colors['text'],
-                'width': '100%',
-                'float': 'center',
-                'display': 'inline-block'
-            }
-        ),
+    # html.Div(dcc.Checklist(id='global_format',
+    #         options=[{'label': i, 'value': i} for i in ['Africa', 'Nigeria']],
+    #         value="Africa",
+    #         labelStyle={'float': 'center', 'display': 'inline-block'},
+    #         ), style={'textAlign': 'center',
+    #             'color': colors['text'],
+    #             'width': '100%',
+    #             'float': 'center',
+    #             'display': 'inline-block'
+    #         }
+    #     ),
 
     html.Br(),
     
@@ -258,7 +254,7 @@ app.layout = html.Div(
         ),
 
         dbc.Row(
-            dbc.Col(["Conducted Medical Test"], xs=12, sm=12, md=12, style={'font-size':'35px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'20px'}),
+            dbc.Col(["Conducted Medical Test"], xs=12, sm=12, md=12, style={'font-size':'32px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'20px'}),
             ),
         dbc.Row([
         dbc.Col([
@@ -288,10 +284,10 @@ app.layout = html.Div(
 
             dbc.Col([
             html.Div(children = ["Active (NG)",
-            html.Div(id='tally-update-active-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(30,200,30)','font-family': 'Orbitron'}),
+            html.Div(id='tally-update-active-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'yellowgreen','font-family': 'Orbitron'}),
             dcc.Interval(
                 id='interval-component-2-ng',
-                interval=700*10000, # in milliseconds
+                interval=7000*10000, # in milliseconds
                 n_intervals=0
                 ),
             ]),
@@ -303,7 +299,7 @@ app.layout = html.Div(
             html.Div(id='tally-update-recovered-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(30,200,30)','font-family': 'Orbitron'}),
             dcc.Interval(
                 id='interval-component-3-ng',
-                interval=700*10000, # in milliseconds
+                interval=7000*10000, # in milliseconds
                 n_intervals=0
                 ),
             ]),
@@ -315,14 +311,14 @@ app.layout = html.Div(
             html.Div(id='tally-update-deaths-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'red','font-family': 'Orbitron'}),
             dcc.Interval(
                 id='interval-component-4-ng',
-                interval=700*10000, # in milliseconds
+                interval=7000*10000, # in milliseconds
                 n_intervals=0
                 ),
             ]),
             ], md=3, width=3, style = { 'text-align': 'right',
                                         'justify-content': 'right'})
 
-    ],justify="between", style = {'padding-bottom':'10px'}),
+    ],style = {'padding-bottom':'10px'}),
 
     dbc.Row(
         dbc.Col(["The Last 24H"], xs=12, sm=12, md=12, style={'font-size':'35px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'20px'})),
@@ -337,30 +333,7 @@ app.layout = html.Div(
                 n_intervals=0
                 ),
             ]),
-            ], className='orbit-font', md=3, width=3),
-
-            dbc.Col([
-            html.Div(children = ["Active (NG)",
-            html.Div(id='live-update-active-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(30,200,30)','font-family': 'Orbitron'}),
-            dcc.Interval(
-                id='interval-component-2a-ng',
-                interval=700*10000, # in milliseconds
-                n_intervals=0
-                ),
-            ]),
-            ], md=3, width=3, style = {'text-align':'center'}),
-
-
-        dbc.Col([
-            html.Div(children = ["Recovered (NG)",
-            html.Div(id='live-update-recovered-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(30,200,30)','font-family': 'Orbitron'}),
-            dcc.Interval(
-                id='interval-component-3a-ng',
-                interval=700*10000, # in milliseconds
-                n_intervals=0
-                ),
-            ]),
-            ], md=3, width=3, style = {'text-align':'center', 'font-family': 'Orbitron'}),
+            ], md=6, width=6),
 
 
         dbc.Col([
@@ -368,11 +341,11 @@ app.layout = html.Div(
             html.Div(id='live-update-deaths-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'red','font-family': 'Orbitron'}),
             dcc.Interval(
                 id='interval-component-4a-ng',
-                interval=700*10000, # in milliseconds
+                interval=7000*10000, # in milliseconds
                 n_intervals=0
                 ),
             ]),
-            ], md=3, width=3, style = { 'text-align': 'right',
+            ], md=6, width=6, style = { 'text-align': 'right',
                                         'justify-content': 'right'})
 
     ],justify="between", style = {'padding-bottom':'10px'}),
@@ -398,13 +371,24 @@ app.layout = html.Div(
 
     html.Hr(),
 
+
     dbc.Container([
+    dbc.Row([ 
+ 
+            dbc.Col(children = ["NCDC EMERGENCY LINES    ",
+            dcc.Markdown('''
+  
+            [0800-9700-0010](tel:080097000010) & [+234-708-7110839](tel:+2347087110839)
+                '''),
+             ], xs=12),
+    ]),
+        
+
     dbc.Row([ 
             dbc.Col(
                 [  
                     dcc.Markdown("[EMMANUEL](https://www.twitter.com/__oemmanuel__)", style={'text-decoration': 'none',
-                                                                            'cursor': 'grab',
-                                                                            'color': 'whitesmoke',
+                                                                            'cursor': 'grab',                                                  'color': 'whitesmoke',
                                                                             'font-weight': 'bold'}),
                 ], xs=6),
 
@@ -413,7 +397,6 @@ app.layout = html.Div(
                     dcc.Markdown(
                     "Resources: [JHU DATA](https://github.com/CSSEGISandData/COVID-19)|[NCDC](https://ncdc.gov.ng/)|[Ploner](https://github.com/ploner/coronavirus-py)", style = {'textAlign': 'right'}),
                     ], xs=6, 
-                    # style = {'textAlign':'right'},
                 ),
 
     ]),
@@ -422,133 +405,133 @@ app.layout = html.Div(
     ])
 
 
-country_group = allData.groupby(by='Country/Region')
+# country_group = allData.groupby(by='Country/Region')
 
-data_reg = []
-xx = []
-yy = []
-colors=['red', 'blue', 'green']
+# data_reg = []
+# xx = []
+# yy = []
+# colors=['red', 'blue', 'green']
 
-for group, dataframe in country_group:
-    dataframe = dataframe.sort_values(by=['date'])
-    trace = go.Scatter(x=dataframe.date.tolist(), 
-                       y=dataframe.CumConfirmed.tolist(),
-                    #    marker=dict(color=colors[len(data_reg)]),
-                       name=group)
-    xx.append(dataframe.date)
-    yy.append(dataframe.CumConfirmed)
-    data_reg.append(trace)
-
-
-def line_graph():
-    figure = go.Figure(data=[
-        go.Bar( 
-            x=xx, y=yy,
-            marker_line_color='rgb(0,0,0)', marker_line_width=1,
-            # marker_color={ 'Deaths':'rgb(200,30,30)', 'Recovered':'rgb(30,200,30)', 'Confirmed':'rgb(100,140,240)'}[metric]
-        )
-    ])
-    figure.update_layout( 
-              barmode='group', legend=dict(x=.05, y=0.95), 
-              plot_bgcolor='whitesmoke', font=tickFont) \
-          .update_xaxes( 
-              title="", tickangle=-90, showgrid=True, gridcolor='#DDDDDD', 
-              tickfont=tickFont, ticktext=xx, tickvals=xx) \
-          .update_yaxes(
-             showgrid=True, gridcolor='#DDDDDD')
-    return figure
+# for group, dataframe in country_group:
+#     dataframe = dataframe.sort_values(by=['date'])
+#     trace = go.Scatter(x=dataframe.date.tolist(), 
+#                        y=dataframe.CumConfirmed.tolist(),
+#                     #    marker=dict(color=colors[len(data_reg)]),
+#                        name=group)
+#     xx.append(dataframe.date)
+#     yy.append(dataframe.CumConfirmed)
+#     data_reg.append(trace)
 
 
+# def line_graph():
+#     figure = go.Figure(data=[
+#         go.Bar( 
+#             x=xx, y=yy,
+#             marker_line_color='rgb(0,0,0)', marker_line_width=1,
+#             # marker_color={ 'Deaths':'rgb(200,30,30)', 'Recovered':'rgb(30,200,30)', 'Confirmed':'rgb(100,140,240)'}[metric]
+#         )
+#     ])
+#     figure.update_layout( 
+#               barmode='group', legend=dict(x=.05, y=0.95), 
+#               plot_bgcolor='whitesmoke', font=tickFont) \
+#           .update_xaxes( 
+#               title="", tickangle=-90, showgrid=True, gridcolor='#DDDDDD', 
+#               tickfont=tickFont, ticktext=xx, tickvals=xx) \
+#           .update_yaxes(
+#              showgrid=True, gridcolor='#DDDDDD')
+#     return figure
 
-@app.callback(
-    Output('trajectory', 'figure'),
-    [Input('global_format', 'value')])
-def trajectory(view, date_index):
-    if view == 'Africa':
-        df = african_data
-        scope = 'countries'
-        threshold = 1000
-    elif view == 'Nigeria':
-        df = african_data[african_data['Country/Region'] == 'Nigeria']
-        df = df.drop('Country/Region', axis=1)
-        df = df.rename(columns={'Province/State': 'Country/Region'})
-        scope = 'states'
-        threshold = 1000
-    else:
-        df = african_data
-        scope = 'countries'
-        threshold = 1000
 
-    date = african_data['date'].unique()[date_index]
 
-    df = df.groupby(['date', 'Country/Region'], as_index=False)['Confirmed'].sum()
-    df['previous_week'] = df.groupby(['Country/Region'])['Confirmed'].shift(7, fill_value=0)
-    df['new_cases'] = df['Confirmed'] - df['previous_week']
-    data = data.drop('Province/State', axis=1).groupby("date").sum().reset_index()
-    newCases = data.select_dtypes(include='Int64').diff().fillna(0)
-    newCases.columns = [column.replace('Cum', 'New') for column in newCases.columns]
-    newCases.to_csv("neww.csv", index=False)
-    data = data.join(newCases)
-    data.to_csv("neww2.csv", index=False)
-    xmax = np.log(1.25 * df['Confirmed'].max()) / np.log(10)
-    xmin = np.log(threshold) / np.log(10)
-    ymax = np.log(1.25 * df['new_cases'].max()) / np.log(10)
-    ymin = np.log(.8 * df[df['Confirmed'] >= threshold]['new_cases'].min()) / np.log(10)
+# @app.callback(
+#     Output('trajectory', 'figure'),
+#     [Input('global_format', 'value')])
+# def trajectory(view, date_index):
+#     if view == 'Africa':
+#         df = african_data
+#         scope = 'countries'
+#         threshold = 1000
+#     elif view == 'Nigeria':
+#         df = african_data[african_data['Country/Region'] == 'Nigeria']
+#         df = df.drop('Country/Region', axis=1)
+#         df = df.rename(columns={'Province/State': 'Country/Region'})
+#         scope = 'states'
+#         threshold = 1000
+#     else:
+#         df = african_data
+#         scope = 'countries'
+#         threshold = 1000
 
-    countries_full = df.groupby(by='Country/Region', as_index=False)['Confirmed'].max().sort_values(by='Confirmed', ascending=False)['Country/Region'].to_list()
+#     date = african_data['date'].unique()[date_index]
+
+#     df = df.groupby(['date', 'Country/Region'], as_index=False)['Confirmed'].sum()
+#     df['previous_week'] = df.groupby(['Country/Region'])['Confirmed'].shift(7, fill_value=0)
+#     df['new_cases'] = df['Confirmed'] - df['previous_week']
+#     data = data.drop('Province/State', axis=1).groupby("date").sum().reset_index()
+#     newCases = data.select_dtypes(include='Int64').diff().fillna(0)
+#     newCases.columns = [column.replace('Cum', 'New') for column in newCases.columns]
+#     newCases.to_csv("neww.csv", index=False)
+#     data = data.join(newCases)
+#     data.to_csv("neww2.csv", index=False)
+#     xmax = np.log(1.25 * df['Confirmed'].max()) / np.log(10)
+#     xmin = np.log(threshold) / np.log(10)
+#     ymax = np.log(1.25 * df['new_cases'].max()) / np.log(10)
+#     ymin = np.log(.8 * df[df['Confirmed'] >= threshold]['new_cases'].min()) / np.log(10)
+
+#     countries_full = df.groupby(by='Country/Region', as_index=False)['Confirmed'].max().sort_values(by='Confirmed', ascending=False)['Country/Region'].to_list()
     
-    df = df[df['date'] <= date]
+#     df = df[df['date'] <= date]
 
-    countries = df.groupby(by='Country/Region', as_index=False)['Confirmed'].max().sort_values(by='Confirmed', ascending=False)
-    countries = countries[countries['Confirmed'] > threshold]['Country/Region'].to_list()
-    countries = [country for country in countries_full if country in countries]
+#     countries = df.groupby(by='Country/Region', as_index=False)['Confirmed'].max().sort_values(by='Confirmed', ascending=False)
+#     countries = countries[countries['Confirmed'] > threshold]['Country/Region'].to_list()
+#     countries = [country for country in countries_full if country in countries]
 
-    traces = []
+#     traces = []
 
-    for country in countries:
-        filtered_df = df[df['Country/Region'] == country].reset_index()
-        idx = filtered_df['Confirmed'].sub(threshold).gt(0).idxmax()
-        trace_data = filtered_df[idx:]
-        trace_data['date'] = pd.to_datetime(trace_data['date'])
-        trace_data['date'] = trace_data['date'].dt.strftime('%b %d, %Y')
+#     for country in countries:
+#         filtered_df = df[df['Country/Region'] == country].reset_index()
+#         idx = filtered_df['Confirmed'].sub(threshold).gt(0).idxmax()
+#         trace_data = filtered_df[idx:]
+#         trace_data['date'] = pd.to_datetime(trace_data['date'])
+#         trace_data['date'] = trace_data['date'].dt.strftime('%b %d, %Y')
 
-        traces.append(
-            go.Scatter(
-                    x=trace_data['Confirmed'],
-                    y=trace_data['new_cases'],
-                    mode='lines',
-                    name=country,
-                    text=trace_data['date'],
-                    hoverinfo='x+text+name')
-        )
+#         traces.append(
+#             go.Scatter(
+#                     x=trace_data['Confirmed'],
+#                     y=trace_data['new_cases'],
+#                     mode='lines',
+#                     name=country,
+#                     text=trace_data['date'],
+#                     hoverinfo='x+text+name')
+#         )
 
-    return {
-        'data': traces,
-        'layout': go.Layout(
-                title='Trajectory of Cases<br>({} with greater than {} confirmed cases)'.format(scope, threshold),
-                xaxis_type="log",
-                yaxis_type="log",
-                xaxis_title='Total Confirmed Cases',
-                yaxis_title='New Confirmed Cases (in the past week)',
-                font=dict(color=colors['text']),
-                paper_bgcolor=colors['background'],
-                plot_bgcolor=colors['background'],
-                xaxis=dict(gridcolor=colors['grid'],
-                           range=[xmin, xmax]),
-                yaxis=dict(gridcolor=colors['grid'],
-                           range=[ymin, ymax]),
-                hovermode='closest',
-                showlegend=True
-            )
-        }
+#     return {
+#         'data': traces,
+#         'layout': go.Layout(
+#                 title='Trajectory of Cases<br>({} with greater than {} confirmed cases)'.format(scope, threshold),
+#                 xaxis_type="log",
+#                 yaxis_type="log",
+#                 xaxis_title='Total Confirmed Cases',
+#                 yaxis_title='New Confirmed Cases (in the past week)',
+#                 font=dict(color=colors['text']),
+#                 paper_bgcolor=colors['background'],
+#                 plot_bgcolor=colors['background'],
+#                 xaxis=dict(gridcolor=colors['grid'],
+#                            range=[xmin, xmax]),
+#                 yaxis=dict(gridcolor=colors['grid'],
+#                            range=[ymin, ymax]),
+#                 hovermode='closest',
+#                 showlegend=True
+#             )
+#         }
 
 
-@app.callback(
-    Output('country-confirmed-line', 'figure'), 
-    [Input('interval-component-4', 'n_intervals')]
-)
-def update_line(n):
-    return line_graph()
+# @app.callback(
+#     Output('country-confirmed-line', 'figure'), 
+#     [Input('interval-component-4', 'n_intervals')]
+# )
+# def update_line(n):
+#     return line_graph()
 
 
 
@@ -556,9 +539,6 @@ def update_line(n):
 def nonreactive_data(country):
     data = african_data.loc[african_data['Country/Region'] == country] \
                   .drop('Country/Region', axis=1)
-    # if state == '<all>':
-    #     data = data.drop('Province/State', axis=1).groupby("date").sum().reset_index()
-    # else:
     data = data.drop('Province/State', axis=1).groupby("date").sum().reset_index()
     newCases = data.select_dtypes(include='Int64').diff().fillna(0)
     newCases.columns = [column.replace('Cum', 'New') for column in newCases.columns]
@@ -703,7 +683,6 @@ def fetch_confirmed_cases(n):
 )
 def fetch_confirmed_cases(n):
     return ng_death_cases_today
-
 
 
 
