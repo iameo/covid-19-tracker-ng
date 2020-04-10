@@ -5,6 +5,7 @@ import dash_html_components as html
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
+import dash_table
 
 import requests
 import json
@@ -38,6 +39,14 @@ colors = {
     'grid': '#333333',
     'red': '#BF0000'
 }
+
+ncdc_url = 'https://covid19.ncdc.gov.ng'
+covid19data_ng_ = pd.read_html(ncdc_url)[3]
+covid19data_ng = pd.DataFrame(covid19data_ng_)
+covid19data_ng.columns = ["States Affected","Lab Confirmed","Active","Recovered","Deaths"]
+covid19data_ng = covid19data_ng.iloc[1:-1, :]
+
+
 
 
 baseURL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/"
@@ -212,13 +221,7 @@ app.layout = html.Div(
   
   
     dbc.Container([
-    # dcc.Graph(
-    #     id = "country-confirmed-line"),
-    #     dcc.Interval(
-    #             id='interval-component-4',
-    #             interval=700*10000, # in milliseconds
-    #             n_intervals=0
-    #             ),
+
  
     dcc.Graph(
         id="plot_new_metrics",
@@ -253,13 +256,14 @@ app.layout = html.Div(
             color="primary", style = {'textAlign': "center", 'text-align':'center'}
         ),
 
-        dbc.Row(
-            dbc.Col(["Conducted Medical Test"], xs=12, sm=12, md=12, style={'font-size':'32px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'20px'}),
-            ),
+
         dbc.Row([
+             dbc.Col(["CONDUCTED MEDICAL TEST"], xs=12, sm=12, md=12, style={'font-size':'32px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'20px'}),
+        
+
         dbc.Col([
             # html.Div(children = ["Conducted Tests",
-            html.Div(id='tally-tests', style = {'font-size': '32px', 'font-weight': 'bold', 'color':'lightyellow', 'text-align':'center','font-family': 'Orbitron'}),
+            html.Div(id='tally-tests', style = {'font-size': '30px', 'font-weight': 'bold', 'color':'lightyellow', 'text-align':'center','font-family': 'Orbitron'}),
             dcc.Interval(
                 id='interval-component-tests-ng',
                 interval=7000*10000, # in milliseconds
@@ -321,7 +325,7 @@ app.layout = html.Div(
     ],style = {'padding-bottom':'10px'}),
 
     dbc.Row(
-        dbc.Col(["The Last 24H"], xs=12, sm=12, md=12, style={'font-size':'35px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'20px'})),
+        dbc.Col(["RECENT UPDATES (every 6H)"], xs=12, sm=12, md=12, style={'font-size':'35px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'20px'})),
 
         dbc.Row([
         dbc.Col([
@@ -368,6 +372,57 @@ app.layout = html.Div(
                 ),
             ], style = {'padding-top':'10px'}),
         ]),
+
+        dbc.Container([
+        dbc.Row([
+        
+            dbc.Col(["(UPDATES WITH EVERY REFRESH)"], xs=12, style = {"text-align":'center', 'font-size':'20px'}),
+           
+            dbc.Col([
+            dash_table.DataTable(
+            id='table',
+            columns = [{'name':i, 'id':i} for i in covid19data_ng.columns],
+            data = covid19data_ng.to_dict('records'),
+            style_cell={
+            'minWidth':'0px', 'width':'80px', 'MaxWidth':'80px',
+            'border': 'thin black solid',
+            # 'width': '100px',
+                },
+            style_header = {
+                'fontWeight': 'bold',
+                'backgroundColor': 'rgb(235, 220, 230)',
+
+            },
+            style_cell_conditional=[
+                {
+                    'if': {'column_id': c},
+                    'textAlign': 'center'
+                } for c in list(covid19data_ng.columns)
+                ],
+            style_data_conditional=[
+                {
+                    'if': {'row_index': 'odd'},
+                    'backgroundColor': 'rgb(248, 248, 248)'
+                }
+                ],
+
+    
+
+
+        ),
+
+            ]),
+        ]),
+        ]),
+
+        html.Br(),
+
+    dbc.Container([
+       
+        html.Div(id="ng_graph")
+    ]),
+#  
+
 
     html.Hr(),
 
@@ -685,7 +740,40 @@ def fetch_confirmed_cases(n):
     return ng_death_cases_today
 
 
+@app.callback(
+    Output('ng_graph', 'children'),
+    [Input('table', 'data')]
+)
+def update_table(rows):
+    return [
+        dcc.Graph(
+            id=column,
+            figure = {
+                "data":[
+                    {
+                        "x": covid19data_ng["States Affected"],
+                        "y": covid19data_ng[column],
+                        "type":"bar",
+                       "marker_color":{ 'Deaths':'rgb(200,30,30)', 'Recovered':'rgb(30,200,30)', 'Active':'rgb(100,140,240)'},
+
+                    }
+                ],
+                "layout": {
+                    "xaxis": {"automargin":True},
+                    "yaxis": {
+                        "automargin":True,
+                        "title": {"text": column}
+                    },
+                    "height":300,
+                    "margin": {"t":10, "l": 10, "r":10},
+                },
+            },
+        )
+        for column in ["Lab Confirmed","Active","Recovered","Deaths"]
+    ]
+
+
 
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug=True)
