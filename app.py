@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+#dash and plotly, for UI and graphs
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -6,10 +8,14 @@ import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import dash_table
+import plotly
 
+
+#requests and json
 import requests
 import json
 
+#dataframe and numerical manipulations
 import pandas as pd
 import numpy as np
 
@@ -33,13 +39,14 @@ NG_states = [
     ]    
 
 
-colors = {
+colors_ = {
     'background': '#111111',
     'text': '#BEBEBE',
     'grid': '#333333',
     'red': '#BF0000'
 }
 
+#establish connection and pull Nigeria data from NCDC site.
 ncdc_url = 'https://covid19.ncdc.gov.ng'
 covid19data_ng_ = pd.read_html(ncdc_url)[3]
 covid19data_ng = pd.DataFrame(covid19data_ng_)
@@ -54,6 +61,7 @@ baseURL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse
 global_stat_url = "https://coronavirus-19-api.herokuapp.com/all"
 ng_stat_url = 'https://coronavirus-19-api.herokuapp.com/countries'
 
+#fetch global data and filter by African countries
 def get_global_stat(url):    
     fetch_url = requests.get(url)
     global_stat = fetch_url.content
@@ -66,6 +74,8 @@ def get_global_stat(url):
 global_cases, global_recovered, global_deaths = get_global_stat(global_stat_url)
 
 
+
+#fetch for just Nigeria; a little rough on the eyes as site keeps updating so this is a little more stable
 def get_nigeria_stat(url):
     fetch_url = requests.get(url)
     global_stat = fetch_url.content
@@ -120,8 +130,8 @@ app.config.suppress_callback_exceptions=True
 app.title = 'COVID-19 TRACKER (AFRICA)'
 
 app.config.update({
-     'routes_pathname_prefix': '',
-     'requests_pathname_prefix': '',
+     'routes_pathname_prefix':'',
+     'requests_pathname_prefix':'',
 })
 
 
@@ -141,7 +151,7 @@ app.layout = html.Div(
                         options=[{'label':c, 'value':c} for c in afri_countries],
                         value='Nigeria'
                         ),
-                    ], width=6, sm=6, md=6,
+                    ], sm=8, md=8,
                     ),
                 dbc.Col(
                     [
@@ -151,13 +161,54 @@ app.layout = html.Div(
                         options=[{'label':m, 'value':m} for m in ['Confirmed', 'Recovered', 'Deaths']],
                         value=['Confirmed', 'Recovered']
                         )
-                    ], width=6, sm=6, md=6,
+                    ], sm=4, md=4, style = {'justify-content':'right'},
 
                     ),# style={ 'font-family':"Courier New, monospace" },
                     
-                ],justify="between"), #container
+                ],justify="center"), #container
          
     html.Br(),
+
+    # dbc.Row([
+
+    #     dbc.Col([
+    #         html.Div(dcc.Dropdown(id='global_format',
+    #         options=[{'label': i, 'value': i} for i in ['Africa', 'Nigeria']],
+    #         value='Africa',
+    #         # labelStyle={'float': 'center', 'display': 'inline-block'},
+    #         ), style={'textAlign': 'center',
+    #             'color': colors_['text'],
+    #             'width': '100%',
+    #             'float': 'center',
+    #             'display': 'inline-block'
+    #         }
+    #     ),
+
+    #       dbc.Checklist(
+    #                     id='metrics_af',
+    #                     options=[{'label':m, 'value':m} for m in ['Confirmed', 'Recovered', 'Deaths']],
+    #                     value=['Confirmed', 'Recovered']
+    #                     ),
+    #         dcc.Graph(
+    #     id="trajectory",
+    #     config={ 'displayModeBar': False }
+    # ),
+
+    #     ]),
+    #     dbc.Col([
+    #         dcc.Graph(
+    #             id = 'country-confirmed-line',
+    #             config = {'displayModeBar':False}
+    #         ),
+    #         dcc.Interval(
+    #             id='interval-component-4',
+    #             interval=7000*10000, # in milliseconds
+    #             n_intervals=0
+    #             ),
+    
+
+    #     ]),
+    # ]),
 
     dbc.Row([
         dbc.Col([
@@ -196,28 +247,7 @@ app.layout = html.Div(
 
     ],justify="between"),
 
-    # dbc.Row([
-    #     dbc.Col([
-    #         html.P("Confirmed (Africa): "
-
-    #         )
-
-    #     ],sm=4),
-    #     dbc.Col([
-    #         html.P("Recovered (Africa): "
-                
-    #         )
-
-    #     ],sm=4),
-    #     dbc.Col([
-    #         html.P(
-    #             "Deaths (Africa): "
-    #         )
-
-    #     ],sm=4)
-
-    # ]),
-    ]),
+    ], style = {'padding-left':'5px', 'padding-right':'5px'}),
   
   
     dbc.Container([
@@ -227,25 +257,15 @@ app.layout = html.Div(
         id="plot_new_metrics",
         config={ 'displayModeBar': False }
     ),
+
     dcc.Graph(
         id="plot_cum_metrics",
         config={ 'displayModeBar': False }
     ),
-    ], style = {'padding-left':'10px', 'padding-right':'10px'}),
+    ], style = {'padding-left':'5px', 'padding-right':'5px'}),
     
-    # html.Div(dcc.Checklist(id='global_format',
-    #         options=[{'label': i, 'value': i} for i in ['Africa', 'Nigeria']],
-    #         value="Africa",
-    #         labelStyle={'float': 'center', 'display': 'inline-block'},
-    #         ), style={'textAlign': 'center',
-    #             'color': colors['text'],
-    #             'width': '100%',
-    #             'float': 'center',
-    #             'display': 'inline-block'
-    #         }
-    #     ),
 
-    html.Br(),
+   
     
     dbc.Container([
     dbc.Alert(
@@ -325,7 +345,7 @@ app.layout = html.Div(
     ],style = {'padding-bottom':'10px'}),
 
     dbc.Row(
-        dbc.Col(["RECENT UPDATES (every 6H)"], xs=12, sm=12, md=12, style={'font-size':'35px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'20px'})),
+        dbc.Col(["RECENT UPDATES (every 12H)"], xs=12, sm=12, md=12, style={'font-size':'35px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'20px'})),
 
         dbc.Row([
         dbc.Col([
@@ -406,9 +426,6 @@ app.layout = html.Div(
                 }
                 ],
 
-    
-
-
         ),
 
             ]),
@@ -460,34 +477,45 @@ app.layout = html.Div(
     ])
 
 
-# country_group = allData.groupby(by='Country/Region')
+"""
+The commented section below is a feature I plan on pushing\
+A graph that shows the spread of the covid19 virus in all African countries.
+
+"""
+
+country_group = allData.groupby(by='Country/Region')
 
 # data_reg = []
 # xx = []
 # yy = []
 # colors=['red', 'blue', 'green']
 
+
+# group_date = african_data["date"].unique()
+# group_countries = african_data["Country/Region"].unique()
+# group_confirmed = african_data.groupby(['date', 'Country/Region'], as_index=False)['CumConfirmed'].sum()
+
 # for group, dataframe in country_group:
 #     dataframe = dataframe.sort_values(by=['date'])
-#     trace = go.Scatter(x=dataframe.date.tolist(), 
+#     trace = go.Scatter(x=dataframe.date.unique().tolist(), 
 #                        y=dataframe.CumConfirmed.tolist(),
 #                     #    marker=dict(color=colors[len(data_reg)]),
 #                        name=group)
-#     xx.append(dataframe.date)
+#     xx.append(dataframe.date.unique())
 #     yy.append(dataframe.CumConfirmed)
 #     data_reg.append(trace)
 
 
 # def line_graph():
 #     figure = go.Figure(data=[
-#         go.Bar( 
-#             x=xx, y=yy,
+#         go.Scatter( 
+#             x=group_date, y=group_confirmed,
 #             marker_line_color='rgb(0,0,0)', marker_line_width=1,
 #             # marker_color={ 'Deaths':'rgb(200,30,30)', 'Recovered':'rgb(30,200,30)', 'Confirmed':'rgb(100,140,240)'}[metric]
 #         )
 #     ])
 #     figure.update_layout( 
-#               barmode='group', legend=dict(x=.05, y=0.95), 
+#               legend=dict(x=.05, y=0.95), 
 #               plot_bgcolor='whitesmoke', font=tickFont) \
 #           .update_xaxes( 
 #               title="", tickangle=-90, showgrid=True, gridcolor='#DDDDDD', 
@@ -498,67 +526,86 @@ app.layout = html.Div(
 
 
 
+
+# @app.callback(
+#     Output('country-confirmed-line', 'figure'), 
+#     [Input('interval-component-4', 'n_intervals')]
+# )
+# def update_line(n):
+#     return line_graph()
+
+
 # @app.callback(
 #     Output('trajectory', 'figure'),
 #     [Input('global_format', 'value')])
-# def trajectory(view, date_index):
+# def trajectory_(view):
 #     if view == 'Africa':
 #         df = african_data
 #         scope = 'countries'
-#         threshold = 1000
+#         threshold = 100
 #     elif view == 'Nigeria':
 #         df = african_data[african_data['Country/Region'] == 'Nigeria']
 #         df = df.drop('Country/Region', axis=1)
 #         df = df.rename(columns={'Province/State': 'Country/Region'})
 #         scope = 'states'
-#         threshold = 1000
+#         threshold = 100
 #     else:
 #         df = african_data
 #         scope = 'countries'
-#         threshold = 1000
+#         threshold = 100
 
-#     date = african_data['date'].unique()[date_index]
+#     date = african_data['date'].unique()
 
-#     df = df.groupby(['date', 'Country/Region'], as_index=False)['Confirmed'].sum()
-#     df['previous_week'] = df.groupby(['Country/Region'])['Confirmed'].shift(7, fill_value=0)
-#     df['new_cases'] = df['Confirmed'] - df['previous_week']
-#     data = data.drop('Province/State', axis=1).groupby("date").sum().reset_index()
-#     newCases = data.select_dtypes(include='Int64').diff().fillna(0)
-#     newCases.columns = [column.replace('Cum', 'New') for column in newCases.columns]
-#     newCases.to_csv("neww.csv", index=False)
-#     data = data.join(newCases)
-#     data.to_csv("neww2.csv", index=False)
-#     xmax = np.log(1.25 * df['Confirmed'].max()) / np.log(10)
+#     df = df.groupby(['date', 'Country/Region'], as_index=False)['CumConfirmed'].sum()
+#     df['previous_week'] = df.groupby(['Country/Region'])['CumConfirmed'].shift(7)
+#     # df['previous_week'] = 
+#     df['new_cases'] = df['CumConfirmed'] - df['previous_week']
+
+#     xmax = np.log(1.25 * df['CumConfirmed'].max()) / np.log(10)
 #     xmin = np.log(threshold) / np.log(10)
 #     ymax = np.log(1.25 * df['new_cases'].max()) / np.log(10)
-#     ymin = np.log(.8 * df[df['Confirmed'] >= threshold]['new_cases'].min()) / np.log(10)
+#     ymin = np.log(.8 * df[df['CumConfirmed'] >= threshold]['new_cases'].min()) / np.log(10)
 
-#     countries_full = df.groupby(by='Country/Region', as_index=False)['Confirmed'].max().sort_values(by='Confirmed', ascending=False)['Country/Region'].to_list()
+#     countries_full = df.groupby(by='Country/Region', as_index=False)['CumConfirmed'].max().sort_values(by='CumConfirmed', ascending=False)['Country/Region']
     
-#     df = df[df['date'] <= date]
+#     df = df[df['date'].unique()]
 
-#     countries = df.groupby(by='Country/Region', as_index=False)['Confirmed'].max().sort_values(by='Confirmed', ascending=False)
-#     countries = countries[countries['Confirmed'] > threshold]['Country/Region'].to_list()
+#     countries = df.groupby(by='Country/Region', as_index=False)['CumConfirmed'].max().sort_values(by='CumConfirmed', ascending=False)
+#     countries = countries[countries['CumConfirmed'] > threshold]['Country/Region'].to_list()
 #     countries = [country for country in countries_full if country in countries]
 
 #     traces = []
+#     trace_colors = plotly.colors.qualitative.D3
+#     color_idx = 0
 
 #     for country in countries:
 #         filtered_df = df[df['Country/Region'] == country].reset_index()
-#         idx = filtered_df['Confirmed'].sub(threshold).gt(0).idxmax()
+#         idx = filtered_df['CumConfirmed'].sub(threshold).gt(0).idxmax()
 #         trace_data = filtered_df[idx:]
 #         trace_data['date'] = pd.to_datetime(trace_data['date'])
 #         trace_data['date'] = trace_data['date'].dt.strftime('%b %d, %Y')
 
 #         traces.append(
 #             go.Scatter(
-#                     x=trace_data['Confirmed'],
+#                     x=trace_data['CumConfirmed'],
 #                     y=trace_data['new_cases'],
 #                     mode='lines',
+#                     marker=dict(color=trace_colors[color_idx % len(trace_colors)]),
 #                     name=country,
 #                     text=trace_data['date'],
 #                     hoverinfo='x+text+name')
 #         )
+
+#         traces.append(
+#             go.Scatter(
+#                     x=trace_data[trace_data['date'] == trace_data['date'].iloc[-1]]['CumConfirmed'],
+#                     y=trace_data[trace_data['date'] == trace_data['date'].iloc[-1]]['new_cases'],
+#                     mode='markers',
+#                     marker=dict(color=trace_colors[color_idx % len(trace_colors)]),
+#                     name=country,
+#                     showlegend=False)
+#         )
+#         color_idx += 1
 
 #     return {
 #         'data': traces,
@@ -568,12 +615,12 @@ app.layout = html.Div(
 #                 yaxis_type="log",
 #                 xaxis_title='Total Confirmed Cases',
 #                 yaxis_title='New Confirmed Cases (in the past week)',
-#                 font=dict(color=colors['text']),
-#                 paper_bgcolor=colors['background'],
-#                 plot_bgcolor=colors['background'],
-#                 xaxis=dict(gridcolor=colors['grid'],
+#                 font=dict(color=dash_colors['text']),
+#                 paper_bgcolor=dash_colors['background'],
+#                 plot_bgcolor=dash_colors['background'],
+#                 xaxis=dict(gridcolor=dash_colors['grid'],
 #                            range=[xmin, xmax]),
-#                 yaxis=dict(gridcolor=colors['grid'],
+#                 yaxis=dict(gridcolor=dash_colors['grid'],
 #                            range=[ymin, ymax]),
 #                 hovermode='closest',
 #                 showlegend=True
@@ -581,13 +628,14 @@ app.layout = html.Div(
 #         }
 
 
-# @app.callback(
-#     Output('country-confirmed-line', 'figure'), 
-#     [Input('interval-component-4', 'n_intervals')]
-# )
-# def update_line(n):
-#     return line_graph()
-
+def reactive_data(country):
+    data = african_data["Country/Region"].unique()
+    data = data.drop('Province/State', axis=1).groupby("date").sum().reset_index()
+    newCases = data.select_dtypes(include='Int64').diff().fillna(0)
+    newCases.columns = [column.replace('Cum', 'New') for column in newCases.columns]
+    data = data.join(newCases)
+    data['dateStr'] = data['date'].dt.strftime('%b %d, %Y')
+    return data
 
 
 
@@ -769,11 +817,11 @@ def update_table(rows):
                 },
             },
         )
-        for column in ["Lab Confirmed","Active","Recovered","Deaths"]
+        for column in ["Active","Recovered","Deaths"]
     ]
 
 
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
