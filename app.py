@@ -309,7 +309,7 @@ app.layout = html.Div(
                                 id='interval-component-2-ng',
                                 interval=7000*10000, # in milliseconds
                                 n_intervals=0
-                                ,
+                                ),
                             ]),
                         ], md=3, width=3, style = {'text-align':'center'}),
 
