@@ -137,37 +137,37 @@ app.config.update({
 
 
 app.layout = html.Div(
-    [
-        dbc.Container([
-        html.H1('DOCUMENTED COVID-19 CASES IN AFRICA', className = "text-center"),
-        html.P("(A possible 1-day delay in data transmission. If you're in Nigeria, check the last graph for more visuals)", className = "text-center"),
+            [
+                dbc.Container([
+                html.H1('DOCUMENTED COVID-19 CASES IN AFRICA', className = "text-center"),
+                html.P("(A possible 1-day delay in data transmission. If you're in Nigeria, check the last graph for more visuals)", className = "text-center"),
         
-        dbc.Row([
-                dbc.Col(
-                    [
-                        html.H5('Country'),
-                        dcc.Dropdown(
-                        id='country',
-                        options=[{'label':c, 'value':c} for c in afri_countries],
-                        value='Nigeria'
-                        ),
-                    ], sm=8, md=8,
+                dbc.Row([
+                    dbc.Col(
+                        [
+                            html.H5('Country'),
+                            dcc.Dropdown(
+                            id='country',
+                            options=[{'label':c, 'value':c} for c in afri_countries],
+                            value='Nigeria'
+                                ),
+                        ], sm=8, md=8,
                     ),
-                dbc.Col(
-                    [
-                        html.H5('Data Metrics'),
-                        dbc.Checklist(
-                        id='metrics',
-                        options=[{'label':m, 'value':m} for m in ['Confirmed', 'Recovered', 'Deaths']],
-                        value=['Confirmed', 'Recovered']
-                        )
-                    ], sm=4, md=4, style = {'justify-content':'right'},
+                    dbc.Col(
+                        [
+                            html.H5('Data Metrics'),
+                            dbc.Checklist(
+                            id='metrics',
+                            options=[{'label':m, 'value':m} for m in ['Confirmed', 'Recovered', 'Deaths']],
+                            value=['Confirmed', 'Recovered']
+                                )
+                        ], sm=4, md=4, style = {'justify-content':'right'},
 
                     ),# style={ 'font-family':"Courier New, monospace" },
                     
                 ],justify="center"), #container
          
-    html.Br(),
+                html.Br(),
 
     # dbc.Row([
 
@@ -210,271 +210,270 @@ app.layout = html.Div(
     #     ]),
     # ]),
 
-    dbc.Row([
-        dbc.Col([
-            html.Div(children = ["Confirmed (Global)",
-            html.Div(id='live-update-confirmed', style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(100,140,240)','font-family': 'Orbitron'}),
-            dcc.Interval(
-                id='interval-component-1',
-                interval=7000*10000, # in milliseconds
-                n_intervals=0
-                ),
-            ]),
-            ], md=4, width=4),
+                dbc.Row([
+                    dbc.Col([
+                    html.Div(children = ["Confirmed (Global)",
+                    html.Div(id='live-update-confirmed', style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(100,140,240)','font-family': 'Orbitron'}),
+                    dcc.Interval(
+                        id='interval-component-1',
+                        interval=7000*10000, # in milliseconds
+                        n_intervals=0
+                        ),
+                    ]),
+                    ], md=4, width=4),
 
-        dbc.Col([
-            html.Div(children = ["Recovered (Global)",
-            html.Div(id='live-update-recovered',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(30,200,30)','font-family': 'Orbitron'}),
-            dcc.Interval(
-                id='interval-component-2',
-                interval=7000*10000, # in milliseconds
-                n_intervals=0
-                ),
-            ]),
-            ], md=4, width=4, style = {'text-align':'center'}),
+                    dbc.Col([
+                        html.Div(children = ["Recovered (Global)",
+                        html.Div(id='live-update-recovered',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(30,200,30)','font-family': 'Orbitron'}),
+                        dcc.Interval(
+                            id='interval-component-2',
+                            interval=7000*10000, # in milliseconds
+                            n_intervals=0
+                            ),
+                        ]),
+                    ], md=4, width=4, style = {'text-align':'center'}),
 
-        dbc.Col([
-            html.Div(children = ["Deaths (Global)",
-            html.Div(id='live-update-deaths',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'red','font-family': 'Orbitron'}),
-            dcc.Interval(
-                id='interval-component-3',
-                interval=7000*10000, # in milliseconds
-                n_intervals=0
-                ),
-            ]),
-            ], md=4, width=4, style = { 'text-align': 'right',
+                    dbc.Col([
+                        html.Div(children = ["Deaths (Global)",
+                        html.Div(id='live-update-deaths',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'red','font-family': 'Orbitron'}),
+                        dcc.Interval(
+                            id='interval-component-3',
+                            interval=7000*10000, # in milliseconds
+                            n_intervals=0
+                            ),
+                        ]),
+                    ], md=4, width=4, style = { 'text-align': 'right',
                                         'justify-content': 'right'})
 
-    ],justify="between"),
+                    ],justify="between"),
 
-    ], style = {'padding-left':'5px', 'padding-right':'5px'}),
+                ], style = {'padding-left':'5px', 'padding-right':'5px'}),
   
   
-    dbc.Container([
+                dbc.Container([
+                    dcc.Graph(
+                        id="plot_new_metrics",
+                        config={ 'displayModeBar': False }
+                    ),
 
- 
-    dcc.Graph(
-        id="plot_new_metrics",
-        config={ 'displayModeBar': False }
-    ),
-
-    dcc.Graph(
-        id="plot_cum_metrics",
-        config={ 'displayModeBar': False }
-    ),
-    ], style = {'padding-left':'5px', 'padding-right':'5px'}),
+                    dcc.Graph(
+                        id="plot_cum_metrics",
+                        config={ 'displayModeBar': False }
+                    ),
+                ], style = {'padding-left':'5px', 'padding-right':'5px'}),
     
 
    
     
-    dbc.Container([
-    dbc.Alert(
-        [
-            "This section is reserved for Nigeria. ", 
-            html.A("click here to view general data", href="#", className="alert-link"),
-            ],
-            color="primary", style = {'textAlign': "center", 'text-align':'center'}
-        ),
+                dbc.Container([
+                    bc.Alert(
+                        [
+                            "This section is reserved for Nigeria. ", 
+                            html.A("click here to view general data", href="#", className="alert-link"),
+                            ],
+                            color="primary", style = {'textAlign': "center", 'text-align':'center'}
+                        ),
 
 
-        dbc.Row([
-             dbc.Col(["CONDUCTED MEDICAL TEST"], xs=12, sm=12, md=12, style={'font-size':'32px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'20px'}),
+                    dbc.Row([
+                        dbc.Col(["CONDUCTED MEDICAL TEST"], xs=12, sm=12, md=12, style={'font-size':'32px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'20px'}),
         
-
-        dbc.Col([
-            # html.Div(children = ["Conducted Tests",
-            html.Div(id='tally-tests', style = {'font-size': '30px', 'font-weight': 'bold', 'color':'lightyellow', 'text-align':'center','font-family': 'Orbitron'}),
-            dcc.Interval(
-                id='interval-component-tests-ng',
-                interval=7000*10000, # in milliseconds
-                n_intervals=0
-            ),
-            # ]),
-            ], className='orbit-font', xs=12, sm=12, md=12, style={'font-size':'30px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'8px','font-family': 'Orbitron'}),
-        ]),
-
-
-         dbc.Row([
-        dbc.Col([
-            html.Div(children = ["Confirmed (NG)",
-            html.Div(id='tally-update-confirmed-ng', style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(100,140,240)','font-family': 'Orbitron'}),
-            dcc.Interval(
-                id='interval-component-1-ng',
-                interval=7000*10000, # in milliseconds
-                n_intervals=0
-                ),
-            ]),
-            ], md=3, width=3),
-
-            dbc.Col([
-            html.Div(children = ["Active (NG)",
-            html.Div(id='tally-update-active-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'yellowgreen','font-family': 'Orbitron'}),
-            dcc.Interval(
-                id='interval-component-2-ng',
-                interval=7000*10000, # in milliseconds
-                n_intervals=0
-                ),
-            ]),
-            ], md=3, width=3, style = {'text-align':'center'}),
-
-
-        dbc.Col([
-            html.Div(children = ["Recovered (NG)",
-            html.Div(id='tally-update-recovered-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(30,200,30)','font-family': 'Orbitron'}),
-            dcc.Interval(
-                id='interval-component-3-ng',
-                interval=7000*10000, # in milliseconds
-                n_intervals=0
-                ),
-            ]),
-            ], md=3, width=3, style = {'text-align':'center'}),
-
-
-        dbc.Col([
-            html.Div(children = ["Deaths (NG)",
-            html.Div(id='tally-update-deaths-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'red','font-family': 'Orbitron'}),
-            dcc.Interval(
-                id='interval-component-4-ng',
-                interval=7000*10000, # in milliseconds
-                n_intervals=0
-                ),
-            ]),
-            ], md=3, width=3, style = { 'text-align': 'right',
-                                        'justify-content': 'right'})
-
-    ],style = {'padding-bottom':'10px'}),
-
-    dbc.Row(
-        dbc.Col(["RECENT UPDATES (every 12H)"], xs=12, sm=12, md=12, style={'font-size':'35px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'20px'})),
-
-        dbc.Row([
-        dbc.Col([
-            html.Div(children = ["Confirmed (NG)",
-            html.Div(id='live-update-confirmed-ng', style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(100,140,240)','font-family': 'Orbitron'}),
-            dcc.Interval(
-                id='interval-component-1a-ng',
-                interval=7000*10000, # in milliseconds
-                n_intervals=0
-                ),
-            ]),
-            ], md=6, width=6),
-
-
-        dbc.Col([
-            html.Div(children = ["Deaths (NG)",
-            html.Div(id='live-update-deaths-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'red','font-family': 'Orbitron'}),
-            dcc.Interval(
-                id='interval-component-4a-ng',
-                interval=7000*10000, # in milliseconds
-                n_intervals=0
-                ),
-            ]),
-            ], md=6, width=6, style = { 'text-align': 'right',
-                                        'justify-content': 'right'})
-
-    ],justify="between", style = {'padding-bottom':'10px'}),
-
-
-    dbc.Row(
-            [
-            dbc.Col([
-                dcc.Dropdown(
-                id='state_ng',
-                options=[{'label':d, 'value':d} for d in NG_states],
-                value = 'Lagos',
-                ),
-  
-                ],sm=8, md=8),
-
-            dbc.Col([
-                html.Div(id='state_output'),
-                ], sm = 4, md=4,
-                ),
-            ], style = {'padding-top':'10px'}),
-        ]),
-
-        dbc.Container([
-        dbc.Row([
-        
-            dbc.Col(["(UPDATES WITH EVERY REFRESH)"], xs=12, style = {"text-align":'center', 'font-size':'20px'}),
-           
-            dbc.Col([
-            dash_table.DataTable(
-            id='table',
-            columns = [{'name':i, 'id':i} for i in covid19data_ng.columns],
-            data = covid19data_ng.to_dict('records'),
-            style_cell={
-            'minWidth':'0px', 'width':'80px', 'MaxWidth':'80px',
-            'border': 'thin black solid',
-            # 'width': '100px',
-                },
-            style_header = {
-                'fontWeight': 'bold',
-                'backgroundColor': 'rgb(235, 220, 230)',
-
-            },
-            style_cell_conditional=[
-                {
-                    'if': {'column_id': c},
-                    'textAlign': 'center'
-                } for c in list(covid19data_ng.columns)
-                ],
-            style_data_conditional=[
-                {
-                    'if': {'row_index': 'odd'},
-                    'backgroundColor': 'rgb(248, 248, 248)'
-                }
-                ],
-
-        ),
-
-            ]),
-        ]),
-        ]),
-
-        html.Br(),
-
-    dbc.Container([
+                    dbc.Col([
+                        html.Div(id='tally-tests', style = {'font-size': '30px', 'font-weight': 'bold', 'color':'lightyellow', 'text-align':'center','font-family': 'Orbitron'}),
+                        dcc.Interval(
+                            id='interval-component-tests-ng',
+                            interval=7000*10000, # in milliseconds
+                            n_intervals=0
+                        ),
        
-        html.Div(id="ng_graph")
-    ]),
-#  
+                        ], className='orbit-font', xs=12, sm=12, md=12, style={'font-size':'30px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'8px','font-family': 'Orbitron'}),
+                        ]),
 
 
-    html.Hr(),
+                    dbc.Row([
+                        dbc.Col([
+                            html.Div(children = ["Confirmed (NG)",
+                            html.Div(id='tally-update-confirmed-ng', style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(100,140,240)','font-family': 'Orbitron'}),
+                            dcc.Interval(
+                                id='interval-component-1-ng',
+                                interval=7000*10000, # in milliseconds
+                                n_intervals=0
+                                ),
+                            ]),
+                        ], md=3, width=3),
+
+                        dbc.Col([
+                            html.Div(children = ["Active (NG)",
+                            html.Div(id='tally-update-active-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'yellowgreen','font-family': 'Orbitron'}),
+                            dcc.Interval(
+                                id='interval-component-2-ng',
+                                interval=7000*10000, # in milliseconds
+                                n_intervals=0
+                                ,
+                            ]),
+                        ], md=3, width=3, style = {'text-align':'center'}),
 
 
-    dbc.Container([
-    dbc.Row([ 
- 
-            dbc.Col(children = ["NCDC EMERGENCY LINES    ",
-            dcc.Markdown('''
+                        dbc.Col([
+                            html.Div(children = ["Recovered (NG)",
+                            html.Div(id='tally-update-recovered-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(30,200,30)','font-family': 'Orbitron'}),
+                            dcc.Interval(
+                                id='interval-component-3-ng',
+                                interval=7000*10000, # in milliseconds
+                                n_intervals=0
+                                ),
+                            ]),
+                        ], md=3, width=3, style = {'text-align':'center'}),
+
+
+                        dbc.Col([
+                            html.Div(children = ["Deaths (NG)",
+                            html.Div(id='tally-update-deaths-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'red','font-family': 'Orbitron'}),
+                            dcc.Interval(
+                                id='interval-component-4-ng',
+                                interval=7000*10000, # in milliseconds
+                                n_intervals=0
+                                ),
+                            ]),
+                        ], md=3, width=3, style = { 'text-align': 'right',
+                                                    'justify-content': 'right'})
+
+                    ],style = {'padding-bottom':'10px'}),
+
+                    dbc.Row(
+                        dbc.Col(["RECENT UPDATES (every 12H)"], xs=12, sm=12, md=12, style={'font-size':'35px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'20px'})),
+
+                        dbc.Row([
+                            dbc.Col([
+                                html.Div(children = ["Confirmed (NG)",
+                                html.Div(id='live-update-confirmed-ng', style = {'font-size': '32px', 'font-weight': 'bold', 'color':'rgb(100,140,240)','font-family': 'Orbitron'}),
+                                dcc.Interval(
+                                id='interval-component-1a-ng',
+                                interval=7000*10000, # in milliseconds
+                                n_intervals=0
+                                        ),
+                                    ]),
+                                ], md=6, width=6),
+
+
+                            dbc.Col([
+                                html.Div(children = ["Deaths (NG)",
+                                html.Div(id='live-update-deaths-ng',  style = {'font-size': '32px', 'font-weight': 'bold', 'color':'red','font-family': 'Orbitron'}),
+                                dcc.Interval(
+                                    id='interval-component-4a-ng',
+                                    interval=7000*10000, # in milliseconds
+                                    n_intervals=0
+                                    ),
+                                ]),
+                                ], md=6, width=6, style = { 'text-align': 'right',
+                                                            'justify-content': 'right'})
+
+                            ],justify="between", style = {'padding-bottom':'10px'}),
+
+
+                    dbc.Row(
+                            [
+                            dbc.Col([
+                                dcc.Dropdown(
+                                id='state_ng',
+                                options=[{'label':d, 'value':d} for d in NG_states],
+                                value = 'Lagos',
+                                ),
   
-            [0800-9700-0010](tel:080097000010) & [+234-708-7110839](tel:+2347087110839)
-                '''),
-             ], xs=12),
-    ]),
+                                ],sm=8, md=8),
+
+                            dbc.Col([
+                                html.Div(id='state_output'),
+                                ], sm = 4, md=4,
+                                ),
+                            ], style = {'padding-top':'10px'}),
+                        ]),
+
+                    dbc.Container([
+                        dbc.Row([
+                            dbc.Col(["(UPDATES WITH EVERY REFRESH)"
+                            ], xs=12, style = {
+                                                'text-align':'center',
+                                                'font-size':'20px'
+                                            }
+                                ),
+           
+                            dbc.Col([
+                                dash_table.DataTable(
+                                    id='table',
+                                    columns = [{'name':i, 'id':i} for i in covid19data_ng.columns],
+                                    data = covid19data_ng.to_dict('records'),
+                                    style_cell={
+                                    'minWidth':'0px', 'width':'80px', 'MaxWidth':'80px',
+                                    'border': 'thin black solid',
+                                    # 'width': '100px',
+                                        },
+                                    style_header = {
+                                                'fontWeight': 'bold',
+                                                'backgroundColor': 'rgb(235, 220, 230)',
+
+                                            },
+                                    style_cell_conditional=[
+                                        {
+                                            'if': {'column_id': c},
+                                            'textAlign': 'center'
+                                        } for c in list(covid19data_ng.columns)
+                                        ],
+                                    style_data_conditional=[
+                                        {
+                                            'if': {'row_index': 'odd'},
+                                            'backgroundColor': 'rgb(248, 248, 248)'
+                                        }   
+                                                ],
+
+                                        ),
+
+                                ]),
+                            ]),
+                        ]),
+
+                    html.Br(),
+
+                    dbc.Container([
+                        html.Div(id="ng_graph")
+                        ]),
+
+                    html.Hr(),
+
+                    dbc.Container([
+                        dbc.Row([ 
+ 
+                            dbc.Col(children = ["NCDC EMERGENCY LINES    ",
+                            dcc.Markdown('''
+  
+                            [0800-9700-0010](tel:080097000010) | [+234-708-7110839](tel:+2347087110839)
+                                '''),
+                            ], xs=12),
+                        ]),
         
 
-    dbc.Row([ 
-            dbc.Col(
-                [  
-                    dcc.Markdown("[EMMANUEL](https://www.twitter.com/__oemmanuel__)", style={'text-decoration': 'none',
-                                                                            'cursor': 'grab',                                                  'color': 'whitesmoke',
-                                                                            'font-weight': 'bold'}),
-                ], xs=6),
+                        dbc.Row([ 
+                            dbc.Col(
+                                [  
+                                    dcc.Markdown("[EMMANUEL](https://www.twitter.com/__oemmanuel__)", style={
+                                                                                                            'text-decoration': 'none',
+                                                                                                            'cursor': 'grab', 
+                                                                                                            'color': 'cyan',
+                                                                                                            'font-weight': 'bold'
+                                                                                                            }),
+                                ], xs=6),
 
-            dbc.Col(
-                [
-                    dcc.Markdown(
-                    "Resources: [JHU DATA](https://github.com/CSSEGISandData/COVID-19)|[NCDC](https://ncdc.gov.ng/)|[Ploner](https://github.com/ploner/coronavirus-py)", style = {'textAlign': 'right'}),
-                    ], xs=6, 
-                ),
+                            dbc.Col(
+                                [
+                                    dcc.Markdown(
+                                    "Resources: [JHU DATA](https://github.com/CSSEGISandData/COVID-19)|[NCDC](https://ncdc.gov.ng/)|[Ploner](https://github.com/ploner/coronavirus-py)", style = {'textAlign': 'right'}),
+                                    ], xs=6, 
+                                ),
 
-    ]),
-    ]),
+                            ]),
+                        ]),
 
-    ])
+                ])
 
 
 """
@@ -483,7 +482,7 @@ A graph that shows the spread of the covid19 virus in all African countries.
 
 """
 
-country_group = allData.groupby(by='Country/Region')
+# country_group = allData.groupby(by='Country/Region')
 
 # data_reg = []
 # xx = []
@@ -610,17 +609,17 @@ country_group = allData.groupby(by='Country/Region')
 #     return {
 #         'data': traces,
 #         'layout': go.Layout(
-#                 title='Trajectory of Cases<br>({} with greater than {} confirmed cases)'.format(scope, threshold),
+#                 title='Trajectory of Cases in <b>{0}</b> (>={1} cases)'.format(scope, threshold),
 #                 xaxis_type="log",
 #                 yaxis_type="log",
 #                 xaxis_title='Total Confirmed Cases',
 #                 yaxis_title='New Confirmed Cases (in the past week)',
-#                 font=dict(color=dash_colors['text']),
-#                 paper_bgcolor=dash_colors['background'],
-#                 plot_bgcolor=dash_colors['background'],
-#                 xaxis=dict(gridcolor=dash_colors['grid'],
+#                 font=dict(color=colors['text']),
+#                 paper_bgcolor=colors['background'],
+#                 plot_bgcolor=colors['background'],
+#                 xaxis=dict(gridcolor=colors['grid'],
 #                            range=[xmin, xmax]),
-#                 yaxis=dict(gridcolor=dash_colors['grid'],
+#                 yaxis=dict(gridcolor=colors['grid'],
 #                            range=[ymin, ymax]),
 #                 hovermode='closest',
 #                 showlegend=True
@@ -667,6 +666,11 @@ def barchart(data, metrics, prefix="", yaxisTitle=""):
               title=yaxisTitle, showgrid=True, gridcolor='#DDDDDD')
     return figure
 
+
+"""
+callback section
+"""
+#first graph
 @app.callback(
     Output('plot_new_metrics', 'figure'), 
     [Input('country', 'value'), Input('metrics', 'value')]
@@ -675,6 +679,7 @@ def update_plot_new_metrics(country, metrics):
     data = nonreactive_data(country)
     return barchart(data, metrics, prefix="New", yaxisTitle="New Cases per Day")
 
+#second graph
 @app.callback(
     Output('plot_cum_metrics', 'figure'), 
     [Input('country', 'value'), Input('metrics', 'value')]
@@ -684,6 +689,7 @@ def update_plot_cum_metrics(country, metrics):
     return barchart(data, metrics, prefix="Cum", yaxisTitle="Cumulated Cases")
 
 
+#state output for Nigeria
 @app.callback(
     Output(component_id='state_output', component_property='children'),
     [Input('state_ng', 'value')]
@@ -693,7 +699,7 @@ def update_output_div(input_value):
         return 'Extracting data and making plots for "{}" '.format(input_value), "(Èkó ò ní bàjé oooooo!)"
     return 'Extracting data and making plots for "{}"'.format(input_value)
 
-#global
+#global-update (3)
 @app.callback(
     Output('live-update-confirmed', 'children'),
     [Input('interval-component-1', 'n_intervals')]
@@ -701,12 +707,14 @@ def update_output_div(input_value):
 def fetch_confirmed_cases(n):
     return global_cases
 
+
 @app.callback(
     Output('live-update-recovered', 'children'),
     [Input('interval-component-2', 'n_intervals')]
 )
 def fetch_confirmed_cases(n):
     return global_recovered
+
 
 @app.callback(
     Output('live-update-deaths', 'children'),
@@ -717,12 +725,12 @@ def fetch_confirmed_cases(n):
 
 
 
-#NG-tally
+#Nigerian-updates
 @app.callback(
     Output('tally-tests', 'children'),
     [Input('interval-component-tests-ng', 'n_intervals')]
 )
-def fetch_confirmed_cases(n):
+def fetch_tests_cases(n):
     return ng_tests
 
 
@@ -737,7 +745,7 @@ def fetch_confirmed_cases(n):
     Output('tally-update-active-ng', 'children'),
     [Input('interval-component-2-ng', 'n_intervals')]
 )
-def fetch_confirmed_cases(n):
+def fetch_active_cases(n):
     return ng_active_cases
 
 
@@ -745,14 +753,14 @@ def fetch_confirmed_cases(n):
     Output('tally-update-recovered-ng', 'children'),
     [Input('interval-component-3-ng', 'n_intervals')]
 )
-def fetch_confirmed_cases(n):
+def fetch_recovered_cases(n):
     return ng_recovered
 
 @app.callback(
     Output('tally-update-deaths-ng', 'children'),
     [Input('interval-component-4-ng', 'n_intervals')]
 )
-def fetch_confirmed_cases(n):
+def fetch_death_cases(n):
     return ng_death_cases
 
 
@@ -761,33 +769,32 @@ def fetch_confirmed_cases(n):
     Output('live-update-confirmed-ng', 'children'),
     [Input('interval-component-1a-ng', 'n_intervals')]
 )
-def fetch_confirmed_cases(n):
+def fetch_confirmed_cases_today(n):
     return ng_confirmed_cases_today
 
 @app.callback(
     Output('live-update-active-ng', 'children'),
     [Input('interval-component-2a-ng', 'n_intervals')]
 )
-def fetch_confirmed_cases(n):
+def fetch_active_cases_today(n):
     return ng_active_cases
-
 
 @app.callback(
     Output('live-update-recovered-ng', 'children'),
     [Input('interval-component-3a-ng', 'n_intervals')]
 )
-def fetch_confirmed_cases(n):
+def fetch_recovered_cases_today(n):
     return ng_recovered
-
 
 @app.callback(
     Output('live-update-deaths-ng', 'children'),
     [Input('interval-component-4a-ng', 'n_intervals')]
 )
-def fetch_confirmed_cases(n):
+def fetch_death_cases_today(n):
     return ng_death_cases_today
 
 
+#table to handle dataframe and make plots
 @app.callback(
     Output('ng_graph', 'children'),
     [Input('table', 'data')]
@@ -802,8 +809,7 @@ def update_table(rows):
                         "x": covid19data_ng["States Affected"],
                         "y": covid19data_ng[column],
                         "type":"bar",
-                       "marker_color":{ 'Deaths':'rgb(200,30,30)', 'Recovered':'rgb(30,200,30)', 'Active':'rgb(100,140,240)'},
-
+                        "marker_color":{ 'Deaths':'rgb(200,30,30)', 'Recovered':'rgb(30,200,30)', 'Active':'rgb(100,140,240)'},
                     }
                 ],
                 "layout": {
@@ -819,6 +825,8 @@ def update_table(rows):
         )
         for column in ["Active","Recovered","Deaths"]
     ]
+
+
 
 
 
