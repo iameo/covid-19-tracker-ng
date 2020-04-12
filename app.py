@@ -266,7 +266,7 @@ app.layout = html.Div(
    
     
                 dbc.Container([
-                    bc.Alert(
+                    dbc.Alert(
                         [
                             "This section is reserved for Nigeria. ", 
                             html.A("click here to view general data", href="#", className="alert-link"),
