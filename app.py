@@ -255,6 +255,11 @@ app.layout = html.Div(
                         id="plot_new_metrics",
                         config={ 'displayModeBar': False }
                     ),
+                    dcc.Graph(
+                        id="line_chart",
+                        config={ 'displayModeBar': False }
+                    ),
+
 
                     dcc.Graph(
                         id="plot_cum_metrics",
@@ -667,10 +672,55 @@ def barchart(data, metrics, prefix="", yaxisTitle=""):
     return figure
 
 
+def linechart(data, prefix="", yaxisTitle=""):
+    # data_length_visible = int(round(len(data.date)/((len(data.date)/2)))) #forces int on a "data ranger"
+    figure = go.Figure()
+
+    """
+    commented out 'cause it shrinks the graph. No need for it now.
+    """
+
+    figure.add_trace(
+        
+        go.Scatter( 
+            name='Recovered (Up is good)', x=data.date, y=data[prefix + "Recovered"],
+            marker_line_color='rgb(0,0,0)', marker_line_width=1.4,
+            connectgaps=True, mode='lines',
+            marker_color= 'rgb(30,200,30)',
+
+        )
+    ),
+    # ])
+    figure.add_trace(
+        #data ranger would have been implemented as follow: data.date[data_length_visible:]
+        
+        go.Scatter( 
+            name='Deaths (Down is good)', x=data.date, y=data[prefix + "Deaths"],
+            marker_line_color='rgb(0,0,0)', marker_line_width=1.5,
+            connectgaps=True, mode='lines',
+            marker_color= 'rgb(200,30,30)',
+
+        )
+    ),
+
+    figure.update_layout(
+        legend=dict(x=.05, y=0.95)
+    )
+
+    figure.update_traces( 
+              mode='lines', connectgaps=True,
+             ) \
+          .update_xaxes( 
+              title="Date", tickangle=-90, showgrid=True, gridcolor='#DDDDDD', 
+              tickfont=tickFont, ticktext=data.dateStr, tickvals=data.date) \
+          .update_yaxes(
+              title=yaxisTitle, showgrid=True, gridcolor='#DDDDDD')
+    return figure
+
 """
 callback section
 """
-#first graph
+#first bar graph
 @app.callback(
     Output('plot_new_metrics', 'figure'), 
     [Input('country', 'value'), Input('metrics', 'value')]
@@ -679,7 +729,16 @@ def update_plot_new_metrics(country, metrics):
     data = nonreactive_data(country)
     return barchart(data, metrics, prefix="New", yaxisTitle="New Cases per Day")
 
-#second graph
+
+@app.callback(
+    Output('line_chart', 'figure'), 
+    [Input('country', 'value'), Input('metrics', 'value')]
+)
+def update_line(country, metrics):
+    data = nonreactive_data(country)
+    return linechart(data, prefix="New", yaxisTitle="Cumulated Cases per Day")
+
+#second bar graph
 @app.callback(
     Output('plot_cum_metrics', 'figure'), 
     [Input('country', 'value'), Input('metrics', 'value')]
