@@ -153,8 +153,7 @@ trend_fig.update_traces(
         )
 #'margin':{'t':25,'l':50},
 trend_fig.update_layout({'margin':{"t":10, "l": 10, "r":10}, 'legend_orientation':'h'})\
-        .update_xaxes(title="", tickangle=-90, showgrid=True, gridcolor='#DDDDDD', 
-                    tickfont=tickFont)\
+        .update_xaxes(title="")\
         .update_yaxes(title="Cumulated Confirmed Cases (LOG SCALED")
         
 

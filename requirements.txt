@@ -7,6 +7,7 @@ dash-table==4.6.1
 Flask==1.1.1
 gunicorn==19.10.0
 pandas==0.23.1
+plotly==4.6.0
 requests==2.20.0
 simplejson==3.17.0
 tornado==5.0.2
