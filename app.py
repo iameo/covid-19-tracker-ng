@@ -9,6 +9,7 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import dash_table
 import plotly
+import plotly.express as px
 
 
 #requests and json
@@ -122,6 +123,40 @@ afri_countries = african_data['Country/Region'].unique()
 afri_countries.sort()
 font_awesome_url = 'https://use.fontawesome.com/releases/v5.8.1/css/all.css'
 
+
+group_confirmed = african_data.groupby(['date', 'Country/Region'], as_index=False)['CumConfirmed'].sum()
+group_confirmed['previous_week'] = group_confirmed.groupby(['Country/Region'])['CumConfirmed'].shift(7) #later use case
+group_confirmed['new_cases'] = group_confirmed['CumConfirmed'] - group_confirmed['previous_week']
+group_confirmed['new_cases'] = group_confirmed['new_cases'].clip(lower=0)
+
+# group_confirmed = group_confirmed.select_dtypes(include='Int64').diff().fillna(0)
+# group_confirmed = group_confirmed.iloc[:47, :]
+
+# print(group_date)
+# print(len(group_countries))
+# group_confirmed_tailed = group_confirmed.tail(len(group_countries)) #tailed
+# print(group_confirmed])
+
+cc = ["Algeria", "Burkina Faso", "Cameroon", "Djibouti", "Egypt", "Ghana", "Morocco", "Nigeria", "South Africa", "Tunisia"]
+
+xc = group_confirmed[group_confirmed["Country/Region"].isin(cc)]
+xc = xc.rename(columns={'CumConfirmed':'Confirmed', 'Country/Region':'Country'})
+# xc["Confirmed (LOG SCALED)"] = np.log1p(xc["Confirmed"])
+xc['dateStr'] = xc['date'].dt.strftime('%b %d, %Y')
+non_zero_xc = xc.fillna(0)
+
+trend_fig = px.line(non_zero_xc, x="date", y="Confirmed",color="Country",\
+                 render_mode='svg', log_y=True)
+trend_fig.update_traces(
+        # line=dict(width=4),
+        selector=dict(type="scatter", mode="lines")
+        )
+#'margin':{'t':25,'l':50},
+trend_fig.update_layout({'margin':{"t":10, "l": 10, "r":10}, 'legend_orientation':'h'})\
+        .update_xaxes(title="", tickangle=-90, showgrid=True, gridcolor='#DDDDDD', 
+                    tickfont=tickFont)\
+        .update_yaxes(title="Cumulated Confirmed Cases (LOG SCALED")
+        
 
 custom = '/assets/font_custom.css'
 app = dash.Dash(__name__, external_stylesheets=[custom, dbc.themes.SOLAR, font_awesome_url])
@@ -265,7 +300,14 @@ app.layout = html.Div(
                         id="plot_cum_metrics",
                         config={ 'displayModeBar': False }
                     ),
-                ], style = {'padding-left':'5px', 'padding-right':'5px'}),
+
+                    dcc.Graph(
+                        id="trend",
+                        config={ 'displayModeBar': False },
+                        figure = trend_fig
+                    ),
+
+                ], style = {'padding-left':'5px', 'padding-right':'5px', 'padding-top':'10px'}),
     
 
    
@@ -276,7 +318,7 @@ app.layout = html.Div(
                             "This section is reserved for Nigeria. ", 
                             html.A("click here to view general data", href="#", className="alert-link"),
                             ],
-                            color="primary", style = {'textAlign': "center", 'text-align':'center'}
+                            color="primary", style = {'textAlign': "center", 'text-align':'center', 'margin-top':'15px'}
                         ),
 
 
@@ -486,6 +528,52 @@ The commented section below is a feature I plan on pushing\
 A graph that shows the spread of the covid19 virus in all African countries.
 
 """
+# countries_with_high_cases = [country for country in african_data["Country/Region"] if african_data["CumConfirmed"] >= 200]
+high_confirmed_countries = african_data[african_data["CumConfirmed"] >= 400]
+def linechartCountries(data, prefix="", yaxisTitle=""):
+    # data_length_visible = int(round(len(data.date)/((len(data.date)/2)))) #forces int on a "data ranger"
+    figure = go.Figure()
+
+    """
+    commented out 'cause it shrinks the graph. No need for it now.
+    """
+
+    figure.add_trace(
+        
+        go.Scatter( 
+            name='Recovered (Up is good)', x=high_confirmed_countries.date, y=high_confirmed_countries[prefix + "Recovered"],
+            marker_line_color='rgb(0,0,0)', marker_line_width=1.4,
+            connectgaps=True, mode='lines',
+            marker_color= 'rgb(30,200,30)',
+
+        ) 
+    ),
+    # ])
+    figure.add_trace(
+        #data ranger would have been implemented as follow: data.date[data_length_visible:]
+        
+        go.Scatter( 
+            name='Deaths (Down is good)', x=high_confirmed_countries.date, y=high_confirmed_countries[prefix + "Deaths"],
+            marker_line_color='rgb(0,0,0)', marker_line_width=1.5,
+            connectgaps=True, mode='lines',
+            marker_color= 'rgb(200,30,30)',
+
+        ) 
+    ),
+
+    figure.update_layout(
+        legend=dict(x=.05, y=0.95)
+    )
+
+    figure.update_traces( 
+              mode='lines', connectgaps=True,
+             ) \
+          .update_xaxes( 
+              title="Date", tickangle=-90, showgrid=True, gridcolor='#DDDDDD', 
+              tickfont=tickFont, ticktext=data.dateStr, tickvals=data.date) \
+          .update_yaxes(
+              title=yaxisTitle, showgrid=True, gridcolor='#DDDDDD')
+    return figure
 
 # country_group = allData.groupby(by='Country/Region')
 
@@ -511,19 +599,21 @@ A graph that shows the spread of the covid19 virus in all African countries.
 
 
 # def line_graph():
-#     figure = go.Figure(data=[
+#     figure = go.Figure()
+#     figure.add_trace(
 #         go.Scatter( 
 #             x=group_date, y=group_confirmed,
 #             marker_line_color='rgb(0,0,0)', marker_line_width=1,
 #             # marker_color={ 'Deaths':'rgb(200,30,30)', 'Recovered':'rgb(30,200,30)', 'Confirmed':'rgb(100,140,240)'}[metric]
 #         )
-#     ])
+#      )
+#     # ])
 #     figure.update_layout( 
 #               legend=dict(x=.05, y=0.95), 
 #               plot_bgcolor='whitesmoke', font=tickFont) \
 #           .update_xaxes( 
 #               title="", tickangle=-90, showgrid=True, gridcolor='#DDDDDD', 
-#               tickfont=tickFont, ticktext=xx, tickvals=xx) \
+#               tickfont=tickFont, ticktext=group_date, tickvals=group_date) \
 #           .update_yaxes(
 #              showgrid=True, gridcolor='#DDDDDD')
 #     return figure
@@ -737,6 +827,8 @@ def update_plot_new_metrics(country, metrics):
 def update_line(country, metrics):
     data = nonreactive_data(country)
     return linechart(data, prefix="New", yaxisTitle="Cumulated Cases per Day")
+    # return line_graph()
+
 
 #second bar graph
 @app.callback(
@@ -746,6 +838,14 @@ def update_line(country, metrics):
 def update_plot_cum_metrics(country, metrics):
     data = nonreactive_data(country)
     return barchart(data, metrics, prefix="Cum", yaxisTitle="Cumulated Cases")
+
+
+
+ 
+
+
+
+
 
 
 #state output for Nigeria
@@ -891,4 +991,4 @@ def update_table(rows):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug=True)
