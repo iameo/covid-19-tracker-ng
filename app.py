@@ -146,15 +146,17 @@ xc['dateStr'] = xc['date'].dt.strftime('%b %d, %Y')
 non_zero_xc = xc.fillna(0)
 
 trend_fig = px.line(non_zero_xc, x="date", y="Confirmed",color="Country",\
-                 render_mode='svg', log_y=True)
+                 render_mode='svg').for_each_trace(lambda t: t.update(name=t.name.split("=")[-1]))
 trend_fig.update_traces(
         # line=dict(width=4),
         selector=dict(type="scatter", mode="lines")
         )
 #'margin':{'t':25,'l':50},
-trend_fig.update_layout({'margin':{"t":10, "l": 10, "r":10}, 'legend_orientation':'h'})\
-        .update_xaxes(title="")\
-        .update_yaxes(title="Cumulated Confirmed Cases (LOG SCALED")
+# 
+trend_fig.update_layout({'margin':{"t":10, "l": 10, "r":10}, 'legend_orientation':'h'}, font=tickFont)\
+        .update_xaxes(title="", tickfont=tickFont)\
+        .update_yaxes(title="Cumulated Confirmed Cases")
+        
         
 
 custom = '/assets/font_custom.css'
@@ -502,7 +504,6 @@ app.layout = html.Div(
                             dbc.Col(
                                 [  
                                     dcc.Markdown("[EMMANUEL](https://www.twitter.com/__oemmanuel__)", style={
-                                                                                                            'text-decoration': 'none',
                                                                                                             'cursor': 'grab', 
                                                                                                             'color': 'cyan',
                                                                                                             'font-weight': 'bold'
@@ -561,7 +562,8 @@ def linechartCountries(data, prefix="", yaxisTitle=""):
     ),
 
     figure.update_layout(
-        legend=dict(x=.05, y=0.95)
+        legend=dict(x=.05, y=0.95),
+        font=tickFont
     )
 
     figure.update_traces( 
@@ -746,7 +748,7 @@ def barchart(data, metrics, prefix="", yaxisTitle=""):
     figure = go.Figure(data=[
         go.Bar( 
             name=metric, x=data.date, y=data[prefix + metric],
-            marker_line_color='rgb(0,0,0)', marker_line_width=1.1,
+            marker_line_color='rgb(0,0,0)', marker_line_width=1.2,
             marker_color={ 'Deaths':'rgb(200,30,30)', 'Recovered':'rgb(30,200,30)', 'Confirmed':'rgb(100,140,240)'}[metric]
         ) for metric in metrics
     ])
@@ -793,7 +795,8 @@ def linechart(data, prefix="", yaxisTitle=""):
     ),
 
     figure.update_layout(
-        legend=dict(x=.05, y=0.95)
+        legend=dict(x=.05, y=0.95),
+        font=tickFont
     )
 
     figure.update_traces( 
@@ -990,4 +993,4 @@ def update_table(rows):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
