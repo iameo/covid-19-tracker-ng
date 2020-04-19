@@ -141,19 +141,15 @@ cc = ["Algeria", "Burkina Faso", "Cameroon", "Djibouti", "Egypt", "Ghana", "Moro
 
 xc = group_confirmed[group_confirmed["Country/Region"].isin(cc)]
 xc = xc.rename(columns={'CumConfirmed':'Confirmed', 'Country/Region':'Country'})
-# xc["Confirmed (LOG SCALED)"] = np.log1p(xc["Confirmed"])
 xc['dateStr'] = xc['date'].dt.strftime('%b %d, %Y')
 non_zero_xc = xc.fillna(0)
 
-trend_fig = px.line(non_zero_xc, x="date", y="Confirmed",color="Country",\
-                 render_mode='svg').for_each_trace(lambda t: t.update(name=t.name.split("=")[-1]))
+trend_fig = px.line(non_zero_xc, x="date", y="Confirmed", color="Country").for_each_trace(lambda t: t.update(name=t.name.split("=")[-1]))
 trend_fig.update_traces(
-        # line=dict(width=4),
+        line=dict(width=3),
         selector=dict(type="scatter", mode="lines")
         )
-#'margin':{'t':25,'l':50},
-# 
-trend_fig.update_layout({'margin':{"t":10, "l": 10, "r":10}, 'legend_orientation':'h'}, font=tickFont)\
+trend_fig.update_layout({ 'legend_orientation':'h'}, font=tickFont)\
         .update_xaxes(title="", tickfont=tickFont)\
         .update_yaxes(title="Cumulated Confirmed Cases")
         
@@ -204,47 +200,6 @@ app.layout = html.Div(
                 ],justify="center"), #container
          
                 html.Br(),
-
-    # dbc.Row([
-
-    #     dbc.Col([
-    #         html.Div(dcc.Dropdown(id='global_format',
-    #         options=[{'label': i, 'value': i} for i in ['Africa', 'Nigeria']],
-    #         value='Africa',
-    #         # labelStyle={'float': 'center', 'display': 'inline-block'},
-    #         ), style={'textAlign': 'center',
-    #             'color': colors_['text'],
-    #             'width': '100%',
-    #             'float': 'center',
-    #             'display': 'inline-block'
-    #         }
-    #     ),
-
-    #       dbc.Checklist(
-    #                     id='metrics_af',
-    #                     options=[{'label':m, 'value':m} for m in ['Confirmed', 'Recovered', 'Deaths']],
-    #                     value=['Confirmed', 'Recovered']
-    #                     ),
-    #         dcc.Graph(
-    #     id="trajectory",
-    #     config={ 'displayModeBar': False }
-    # ),
-
-    #     ]),
-    #     dbc.Col([
-    #         dcc.Graph(
-    #             id = 'country-confirmed-line',
-    #             config = {'displayModeBar':False}
-    #         ),
-    #         dcc.Interval(
-    #             id='interval-component-4',
-    #             interval=7000*10000, # in milliseconds
-    #             n_intervals=0
-    #             ),
-    
-
-    #     ]),
-    # ]),
 
                 dbc.Row([
                     dbc.Col([
@@ -308,9 +263,7 @@ app.layout = html.Div(
                         figure = trend_fig
                     ),
 
-                ], style = {'padding-left':'5px', 'padding-right':'5px', 'padding-top':'10px'}),
-    
-
+                ], style = {'padding-left':'5px', 'padding-right':'5px', 'padding-top':'10px'}),   
    
     
                 dbc.Container([
@@ -523,11 +476,7 @@ app.layout = html.Div(
                 ])
 
 
-"""
-The commented section below is a feature I plan on pushing\
-A graph that shows the spread of the covid19 virus in all African countries.
 
-"""
 # countries_with_high_cases = [country for country in african_data["Country/Region"] if african_data["CumConfirmed"] >= 200]
 high_confirmed_countries = african_data[african_data["CumConfirmed"] >= 400]
 def linechartCountries(data, prefix="", yaxisTitle=""):
@@ -576,6 +525,12 @@ def linechartCountries(data, prefix="", yaxisTitle=""):
               title=yaxisTitle, showgrid=True, gridcolor='#DDDDDD')
     return figure
 
+
+"""
+The commented section below is a feature I plan on pushing\
+A graph that shows the spread of the covid19 virus in all African countries.
+
+"""
 # country_group = allData.groupby(by='Country/Region')
 
 # data_reg = []
@@ -840,11 +795,6 @@ def update_line(country, metrics):
 def update_plot_cum_metrics(country, metrics):
     data = nonreactive_data(country)
     return barchart(data, metrics, prefix="Cum", yaxisTitle="Cumulated Cases")
-
-
-
- 
-
 
 
 
