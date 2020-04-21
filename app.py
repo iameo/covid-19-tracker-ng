@@ -22,6 +22,7 @@ import numpy as np
 
 
 
+
 African_countries = [
     "Algeria", "Angola", "Benin", "Botswana","Burkina Faso", "Burundi", "Cabo Verde",
     "Cameroon", "Central African Republic (CAR)", "Chad", "Comoros", "Congo, Democratic Republic of the Congo", "Republic of the Cote d'Ivoire",
@@ -60,7 +61,7 @@ covid19data_ng = covid19data_ng.iloc[1:-1, :]
 baseURL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/"
 
 global_stat_url = "https://coronavirus-19-api.herokuapp.com/all"
-ng_stat_url = 'https://coronavirus-19-api.herokuapp.com/countries'
+ng_stat_url = 'https://coronavirus-19-api.herokuapp.com/countries/Nigeria'
 
 #fetch global data and filter by African countries
 def get_global_stat(url):    
@@ -79,21 +80,16 @@ global_cases, global_recovered, global_deaths = get_global_stat(global_stat_url)
 #fetch for just Nigeria; a little rough on the eyes as site keeps updating so this is a little more stable
 def get_nigeria_stat(url):
     fetch_url = requests.get(url)
-    global_stat = fetch_url.content
-    global_stat = json.loads(global_stat)
-    j = []
-    for i in range(len(global_stat)):
-        if global_stat[i]['country'] == 'Nigeria':
-            j.append(i)
-    global_stat = global_stat[j[0]]
-    ng_active_cases = global_stat['active']
-    ng_recovered = global_stat['recovered']
-    ng_critical = global_stat['critical']
-    ng_confirmed_cases = global_stat['cases']
-    ng_confirmed_cases_today = global_stat['todayCases']
-    ng_death_cases = global_stat['deaths']
-    ng_death_cases_today = global_stat['todayDeaths']
-    ng_tests = global_stat['totalTests']
+    ng_stat = fetch_url.content
+    ng_stat = json.loads(ng_stat)
+    ng_active_cases = ng_stat['active']
+    ng_recovered = ng_stat['recovered']
+    ng_critical = ng_stat['critical']
+    ng_confirmed_cases = ng_stat['cases']
+    ng_confirmed_cases_today = ng_stat['todayCases']
+    ng_death_cases = ng_stat['deaths']
+    ng_death_cases_today = ng_stat['todayDeaths']
+    ng_tests = ng_stat['totalTests']
     return ng_active_cases, ng_confirmed_cases, ng_confirmed_cases_today, ng_death_cases, ng_critical, ng_death_cases_today, ng_recovered, ng_tests
 
 ng_active_cases, ng_confirmed_cases, ng_confirmed_cases_today, ng_death_cases, ng_critical, ng_death_cases_today, ng_recovered, ng_tests = get_nigeria_stat(ng_stat_url)
@@ -842,9 +838,12 @@ def fetch_confirmed_cases(n):
     [Input('interval-component-tests-ng', 'n_intervals')]
 )
 def fetch_tests_cases(n):
-    return ng_tests
+        return ng_tests
 
-
+    # cum_confirmed_NG = int(covid19data_ng_total.iloc[:, 1])
+    # cum_active_NG = int(covid19data_ng_total.iloc[:, 2])
+    # cum_recovered_NG = int(covid19data_ng_total.iloc[:, 3])
+    # cum_deaths_NG =  int(covid19data_ng_total.iloc[:, 4])
 @app.callback(
     Output('tally-update-confirmed-ng', 'children'),
     [Input('interval-component-1-ng', 'n_intervals')]
@@ -857,7 +856,7 @@ def fetch_confirmed_cases(n):
     [Input('interval-component-2-ng', 'n_intervals')]
 )
 def fetch_active_cases(n):
-    return ng_active_cases
+        return ng_active_cases
 
 
 @app.callback(
@@ -865,14 +864,14 @@ def fetch_active_cases(n):
     [Input('interval-component-3-ng', 'n_intervals')]
 )
 def fetch_recovered_cases(n):
-    return ng_recovered
+        return ng_recovered
 
 @app.callback(
     Output('tally-update-deaths-ng', 'children'),
     [Input('interval-component-4-ng', 'n_intervals')]
 )
 def fetch_death_cases(n):
-    return ng_death_cases
+        return ng_death_cases
 
 
 #NG-Live
@@ -881,21 +880,21 @@ def fetch_death_cases(n):
     [Input('interval-component-1a-ng', 'n_intervals')]
 )
 def fetch_confirmed_cases_today(n):
-    return ng_confirmed_cases_today
+        return ng_confirmed_cases_today
 
-@app.callback(
-    Output('live-update-active-ng', 'children'),
-    [Input('interval-component-2a-ng', 'n_intervals')]
-)
-def fetch_active_cases_today(n):
-    return ng_active_cases
+# @app.callback(
+#     Output('live-update-active-ng', 'children'),
+#     [Input('interval-component-2a-ng', 'n_intervals')]
+# )
+# def fetch_active_cases_today(n):
+#     return ng_active_cases
 
-@app.callback(
-    Output('live-update-recovered-ng', 'children'),
-    [Input('interval-component-3a-ng', 'n_intervals')]
-)
-def fetch_recovered_cases_today(n):
-    return ng_recovered
+# @app.callback(
+#     Output('live-update-recovered-ng', 'children'),
+#     [Input('interval-component-3a-ng', 'n_intervals')]
+# )
+# def fetch_recovered_cases_today(n):
+#     return ng_recovered
 
 @app.callback(
     Output('live-update-deaths-ng', 'children'),
