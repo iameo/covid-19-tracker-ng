@@ -838,7 +838,7 @@ def fetch_confirmed_cases(n):
     [Input('interval-component-tests-ng', 'n_intervals')]
 )
 def fetch_tests_cases(n):
-        return ng_tests
+    return ng_tests
 
     # cum_confirmed_NG = int(covid19data_ng_total.iloc[:, 1])
     # cum_active_NG = int(covid19data_ng_total.iloc[:, 2])
@@ -856,7 +856,7 @@ def fetch_confirmed_cases(n):
     [Input('interval-component-2-ng', 'n_intervals')]
 )
 def fetch_active_cases(n):
-        return ng_active_cases
+    return ng_active_cases
 
 
 @app.callback(
@@ -864,14 +864,14 @@ def fetch_active_cases(n):
     [Input('interval-component-3-ng', 'n_intervals')]
 )
 def fetch_recovered_cases(n):
-        return ng_recovered
+    return ng_recovered
 
 @app.callback(
     Output('tally-update-deaths-ng', 'children'),
     [Input('interval-component-4-ng', 'n_intervals')]
 )
 def fetch_death_cases(n):
-        return ng_death_cases
+    return ng_death_cases
 
 
 #NG-Live
@@ -880,7 +880,7 @@ def fetch_death_cases(n):
     [Input('interval-component-1a-ng', 'n_intervals')]
 )
 def fetch_confirmed_cases_today(n):
-        return ng_confirmed_cases_today
+    return ng_confirmed_cases_today
 
 # @app.callback(
 #     Output('live-update-active-ng', 'children'),
