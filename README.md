@@ -8,3 +8,5 @@ View and compare stats.
 
 
 ### Contributions are welcomed.
+
+- Favicon by Ope.
