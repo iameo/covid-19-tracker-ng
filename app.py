@@ -840,10 +840,10 @@ def fetch_confirmed_cases(n):
 def fetch_tests_cases(n):
     return ng_tests
 
-    # cum_confirmed_NG = int(covid19data_ng_total.iloc[:, 1])
-    # cum_active_NG = int(covid19data_ng_total.iloc[:, 2])
-    # cum_recovered_NG = int(covid19data_ng_total.iloc[:, 3])
-    # cum_deaths_NG =  int(covid19data_ng_total.iloc[:, 4])
+# cum_confirmed_NG = int(covid19data_ng_total.iloc[:, 1])
+# cum_active_NG = int(covid19data_ng_total.iloc[:, 2])
+# cum_recovered_NG = int(covid19data_ng_total.iloc[:, 3])
+# cum_deaths_NG =  int(covid19data_ng_total.iloc[:, 4])
 @app.callback(
     Output('tally-update-confirmed-ng', 'children'),
     [Input('interval-component-1-ng', 'n_intervals')]
