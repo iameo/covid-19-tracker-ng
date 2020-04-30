@@ -175,7 +175,7 @@ app.layout = html.Div(
             [
                 dbc.Container([
                 html.H1('DOCUMENTED COVID-19 CASES IN AFRICA', className = "text-center"),
-                html.P("(A possible 1-day delay in data transmission. If you're in Nigeria, check the last graph for more visuals)", className = "text-center"),
+                html.P("(A possible 1-day delay in data transmission. If you're in Nigeria, check the last graph for visuals by states)", className = "text-center"),
         
                 dbc.Row([
                     dbc.Col(
@@ -845,7 +845,7 @@ def fetch_confirmed_cases(n):
     [Input('interval-component-tests-ng', 'n_intervals')]
 )
 def fetch_tests_cases(n):
-    return ng_tests
+    return ng_tests, "+"
 
 # cum_confirmed_NG = int(covid19data_ng_total.iloc[:, 1])
 # cum_active_NG = int(covid19data_ng_total.iloc[:, 2])
