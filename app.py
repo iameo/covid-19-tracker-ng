@@ -50,17 +50,17 @@ colors_ = {
 
 #establish connection and pull Nigeria data from NCDC site.
 
-ncdc_url = 'https://covid19.ncdc.gov.ng/'
+ncdc_url = 'https://covid19.ncdc.gov.ng'
 header = {
   "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36",
   "X-Requested-With": "XMLHttpRequest"
 }
 
 ncdc_ = requests.get(ncdc_url, headers=header)
-covid19data_ng_ = pd.read_html(ncdc_.text)[3]
+covid19data_ng_ = pd.read_html(ncdc_.text)[0]
 covid19data_ng = pd.DataFrame(covid19data_ng_).dropna(axis=0)
 covid19data_ng.columns = ["States Affected","Lab Confirmed","Active","Recovered","Deaths"]
-covid19data_ng = covid19data_ng.iloc[1:-1, :]
+
 
 
 
@@ -116,7 +116,7 @@ allData = loadData("time_series_covid19_confirmed_global.csv", "CumConfirmed") \
     .merge(loadData("time_series_covid19_deaths_global.csv", "CumDeaths")) \
     .merge(loadData("time_series_covid19_recovered_global.csv", "CumRecovered"))
 
-# allData.to_csv("/home/LEGION/NG_covid19_ML/data/allData.csv", index=False)
+allData.to_csv("/home/LEGION/NG_covid19_ML/data/allData.csv", index=False)
 
 # world_data = allData["Country/Region"].unique()
 # world_data.sort()
