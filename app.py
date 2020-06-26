@@ -290,7 +290,7 @@ app.layout = html.Div(
                             n_intervals=0
                         ),
        
-                        ], className='orbit-font', xs=12, sm=12, md=12, style={'font-size':'30px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'8px','font-family': 'Orbitron'}),
+                        ], className='orbit-font', xs=12, sm=12, md=12, style={'font-size':'35px', 'text-align':'center', 'font-weight':'bold', 'padding-top':'1px','font-family': 'Orbitron'}),
                         ]),
 
 
