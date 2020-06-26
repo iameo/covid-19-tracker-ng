@@ -130,7 +130,7 @@ font_awesome_url = 'https://use.fontawesome.com/releases/v5.8.1/css/all.css'
 group_confirmed = african_data.groupby(['date', 'Country/Region'], as_index=False)['CumConfirmed'].sum()
 group_confirmed['previous_week'] = group_confirmed.groupby(['Country/Region'])['CumConfirmed'].shift(7) #later use case
 group_confirmed['new_cases'] = group_confirmed['CumConfirmed'] - group_confirmed['previous_week']
-group_confirmed['new_cases'] = group_confirmed['new_cases'].clip(lower=0)
+group_confirmed['new_cases'] = group_confirmed['new_cases'].fillna(0).clip(lower=0)
 
 # group_confirmed = group_confirmed.select_dtypes(include='Int64').diff().fillna(0)
 # group_confirmed = group_confirmed.iloc[:47, :]
